@@ -1,0 +1,14 @@
+release/Camera.o
+release/CastRay.o
+release/CollisionTree.o
+release/Engine.o
+release/FileImport.o
+release/Obj3d.o
+release/Raytracing.o
+release/Scene.o
+release/Vector.o
+release/GLWidget.o
+release/main.o
+release/MainWindow.o
+release/moc_MainWindow.o
+release/moc_GLWidget.o

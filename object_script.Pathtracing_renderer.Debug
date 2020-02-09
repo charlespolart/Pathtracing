@@ -1,0 +1,14 @@
+debug/Camera.o
+debug/CastRay.o
+debug/CollisionTree.o
+debug/Engine.o
+debug/FileImport.o
+debug/Obj3d.o
+debug/Raytracing.o
+debug/Scene.o
+debug/Vector.o
+debug/GLWidget.o
+debug/main.o
+debug/MainWindow.o
+debug/moc_MainWindow.o
+debug/moc_GLWidget.o
