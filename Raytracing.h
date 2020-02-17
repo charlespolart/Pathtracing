@@ -7,9 +7,6 @@
 class Raytracing
 {
 public:
-    Raytracing();
-    ~Raytracing();
-
     static Vector3d lightning(const Ray &ray, collisionData_t &collisionData, const Vector2i &pix);
     static Vector3d render(const Ray &ray, Scene *scene, const Vector2i &pix);
 };

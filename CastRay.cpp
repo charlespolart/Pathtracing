@@ -96,6 +96,7 @@ void CastRay::browseTree(const Ray &ray, const treeNode_t *node, collisionData_t
         collisionData.vn1 = node->obj3d->vertices->vn[node->obj3d->faces3[node->faceIndex].indexVn[1]-1];
         collisionData.vn2 = node->obj3d->vertices->vn[node->obj3d->faces3[node->faceIndex].indexVn[2]-1];
         collisionData.normal = node->obj3d->vertices->vn[node->obj3d->faces3[node->faceIndex].indexVn[0]-1];
+        collisionData.material = node->obj3d->material;
     }
 }
 
@@ -154,6 +155,5 @@ bool CastRay::castRay(const Ray &ray, const treeNode_t *node, collisionData_t &c
     }
     collisionData.position = ray.origin + ray.direction*collisionData.t;
     collisionData.normal = CastRay::normalInterpolation(collisionData);
-    //collisionData.color = ;
     return (true);
 }

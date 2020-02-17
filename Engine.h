@@ -7,6 +7,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Raytracing.h"
+#include "Pathtracing.h"
 
 class Engine
 {
@@ -26,7 +27,9 @@ public:
 private:
     void putPixel(int x, int y, const Vector3d &c);
     Vector3d raytracing(const Ray &);
+    Vector3d pathtracing(const Ray &);
     void drawRaytracing(int *current);
+    void drawPathtracing(int *current);
     void displayRenderTime(long long time);
     void render();
 

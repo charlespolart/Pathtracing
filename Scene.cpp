@@ -2,7 +2,8 @@
 
 Scene::Scene() :
     camera(new Camera),
-    totalThreads(std::thread::hardware_concurrency())
+    totalThreads(std::thread::hardware_concurrency()),
+    renderingType(RAYTRACING)
 {
 }
 

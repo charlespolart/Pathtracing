@@ -10,7 +10,7 @@ Vector3d Raytracing::lightning(const Ray &ray, collisionData_t &collisionData, c
         collisionData.normal *= -1.0;
     if ((cosA = lightRay.direction.dotProduct(collisionData.normal)) >= 0.0)
     {
-        color = collisionData.color*cosA;
+        color = collisionData.material->color*cosA;
     }
     return (color);
 }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "Vector.h"
+#include "Material.h"
 
 struct vertices_t
 {
@@ -23,12 +24,14 @@ class Obj3d
 {
 public:
     Obj3d();
+    ~Obj3d();
 
 public:
     std::string name;
     vertices_t *vertices;
     std::vector<face3_t> faces3;
     void *collisionTree;
+    Material *material;
 };
 
 #endif // OBJ3D_H

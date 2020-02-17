@@ -8,6 +8,12 @@
 #include "FileImport.h"
 #include "CollisionTree.h"
 
+enum renderingType_e
+{
+    RAYTRACING,
+    PATHTRACING
+};
+
 struct mesh_t
 {
     vertices_t vertices;
@@ -31,6 +37,7 @@ public:
     Camera *camera;
     struct mesh_t mesh;
     size_t totalThreads;
+    renderingType_e renderingType;
 };
 
 #endif // SCENE_H

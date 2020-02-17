@@ -14,7 +14,7 @@ struct collisionData_t
     Vector3d vn0, vn1, vn2;
     Vector3d position;
     Vector3d normal;
-    Vector3d color = Vector3d(1.0, 1.0, 1.0);
+    Material *material;
 };
 
 class CastRay

@@ -79,6 +79,27 @@ void Engine::drawRaytracing(int *current)
     }
 }
 
+void Engine::drawPathtracing(int *current)
+{
+    int y = 0;
+
+    while (this->rendering)
+    {
+        this->render_mutex.lock();
+        if (*current >= this->scene->camera->height)
+        {
+            *current = 0;
+        }
+        y = *current;
+        (*current)++;
+        this->render_mutex.unlock();
+        for (int x = 0; x < this->scene->camera->width; ++x)
+        {
+            this->putPixel(x, y, Pathtracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
+        }
+    }
+}
+
 void Engine::displayRenderTime(long long time)
 {
     std::string str;
@@ -119,7 +140,7 @@ void Engine::render()
             current = 0;
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
             {
-                render_threads.emplace_back(std::thread(&Engine::drawRaytracing, this, &current));
+                render_threads.emplace_back(std::thread((this->scene->renderingType == RAYTRACING ? &Engine::drawRaytracing : &Engine::drawPathtracing), this, &current));
             }
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
             {
