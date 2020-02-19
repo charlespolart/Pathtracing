@@ -5,8 +5,7 @@ GLWidget::GLWidget(QWidget *parent) :
     pWidth(0), pHeight(0),
     pixels(nullptr),
     textureId(0),
-    update_timer(new QTimer(this)),
-    currentLine(0)
+    update_timer(new QTimer(this))
 {
     connect(this->update_timer, SIGNAL(timeout()), this, SLOT(update_timeOut()));
     this->update_timer->start(1000/FPS);

@@ -15,9 +15,9 @@ struct vertices_t
 
 struct face3_t
 {
-    size_t indexV[3] = {0, 0, 0};
-    size_t indexVt[3] = {0, 0, 0};
-    size_t indexVn[3] = {0, 0, 0};
+    int indexV[3] = {0, 0, 0};
+    int indexVt[3] = {0, 0, 0};
+    int indexVn[3] = {0, 0, 0};
 };
 
 class Obj3d

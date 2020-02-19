@@ -2,6 +2,9 @@
 #define COLLISIONTREE_H
 
 #include <algorithm>
+#include <thread>
+#include <mutex>
+#include <iostream>
 #include "Vector.h"
 #include "Obj3d.h"
 
@@ -21,17 +24,14 @@ struct treeNode_t
     boundingBox_t *bBox = nullptr;
 };
 
-struct node_t
-{
-};
-
 class CollisionTree
 {
 public:
     static void freeTree(treeNode_t *node);
-    static treeNode_t *build(std::vector<Obj3d *> &objs);
+    static treeNode_t *build(std::vector<Obj3d *> &objs, int threads);
+    static void buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<treeNode_t *> &trees, size_t *index);
 
-    private:
+private:
     static boundingBox_t *createBoundingBox(const boundingBox_t *bBox1, const boundingBox_t *bBox2);
     static boundingBox_t *createBoundingBox(const face3_t &face, const std::vector<Vector3d> &vertices);
     static treeNode_t *buildTreeRoots(const std::vector<treeNode_t *> &leafs);

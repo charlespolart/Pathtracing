@@ -97,14 +97,41 @@ treeNode_t *CollisionTree::buildTreeLeafs(Obj3d *obj3d)
     return (CollisionTree::buildTreeRoots(leafs));
 }
 
-treeNode_t *CollisionTree::build(std::vector<Obj3d *> &obj3ds)
-{
-    std::vector<treeNode_t *> trees;
+static std::mutex index_mutex;
 
-    for (size_t i = 0; i < obj3ds.size(); ++i)
+void CollisionTree::buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<treeNode_t *> &trees, size_t *index)
+{
+    size_t i = 0;
+
+    while (true)
     {
+        index_mutex.lock();
+        if (*index >= obj3ds.size())
+        {
+            index_mutex.unlock();
+            break;
+        }
+        i = *index;
+        (*index)++;
+        index_mutex.unlock();
         obj3ds[i]->collisionTree = CollisionTree::buildTreeLeafs(obj3ds[i]);
         trees.push_back(static_cast<treeNode_t *>(obj3ds[i]->collisionTree));
+    }
+}
+
+treeNode_t *CollisionTree::build(std::vector<Obj3d *> &obj3ds, int threads)
+{
+    std::vector<treeNode_t *> trees;
+    std::vector<std::thread> build_threads;
+    size_t index = 0;
+
+    for (int i = 0; i < threads; ++i)
+    {
+        build_threads.emplace_back(std::thread(&CollisionTree::buildMultiThreads, std::ref(obj3ds), std::ref(trees), &index));
+    }
+    for (int i = 0; i < threads; ++i)
+    {
+        build_threads[i].join();
     }
     return (CollisionTree::buildTreeRoots(trees));
 }

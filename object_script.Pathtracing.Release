@@ -1,3 +1,4 @@
+release/Benchmark.o
 release/Camera.o
 release/CastRay.o
 release/CollisionTree.o

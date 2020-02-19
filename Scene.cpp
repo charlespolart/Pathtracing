@@ -22,7 +22,13 @@ void Scene::freeMesh()
 
 void Scene::loadFile(const std::string &path)
 {
+    Benchmark benchmark;
+
     this->freeMesh();
     FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices);
-    this->mesh.collisionTree = CollisionTree::build(this->mesh.objs);
+}
+
+void Scene::buidTree()
+{
+    this->mesh.collisionTree = CollisionTree::build(this->mesh.objs, this->totalThreads);
 }

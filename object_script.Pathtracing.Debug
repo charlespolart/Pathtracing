@@ -1,3 +1,4 @@
+debug/Benchmark.o
 debug/Camera.o
 debug/CastRay.o
 debug/CollisionTree.o

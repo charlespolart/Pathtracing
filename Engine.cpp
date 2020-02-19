@@ -100,42 +100,17 @@ void Engine::drawPathtracing(int *current)
     }
 }
 
-void Engine::displayRenderTime(long long time)
-{
-    std::string str;
-
-    str = "Rendered in ";
-    if (time >= 3600000)
-    {
-        str += std::to_string(time/3600000)+"h";
-        time %= 3600000;
-    }
-    if (time >= 60000)
-    {
-        str += std::to_string(time/60000)+"m";
-        time %= 60000;
-    }
-    if (time >= 1000)
-    {
-        str += std::to_string(time/1000)+"s";
-        time %= 1000;
-    }
-    str += std::to_string(time)+"ms";
-    QString qstr = QString::fromStdString(str);
-    QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, qstr));
-}
-
 void Engine::render()
 {
     std::vector<std::thread> render_threads;
-    //int *current = this->mainwindow->getCurrentLine();
+    Benchmark benchmark;
     int current = 0;
 
     while (!this->exit)
     {
         if (this->rendering)
         {
-            auto start = std::chrono::steady_clock::now();
+            benchmark.start();
             render_threads.clear();
             current = 0;
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
@@ -147,8 +122,8 @@ void Engine::render()
                 render_threads[i].join();
             }
             this->rendering = false;
+            QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, QString::fromStdString(benchmark.getBenchTime().fullTime_str)));
             QMetaObject::invokeMethod(this->mainwindow, "disableOptions", Qt::AutoConnection, Q_ARG(bool, false));
-            this->displayRenderTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-start).count());
         }
         Sleep(10);
     }

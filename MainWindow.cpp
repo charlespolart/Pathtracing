@@ -67,15 +67,28 @@ void MainWindow::writeTerminal(const QString &str, bool replace)
 
 void MainWindow::on_load3DFile_pushButton_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Open file"), "",
-                                                    tr("OBJ file (*.obj);;All Files (*)"));
+    QString path = QFileDialog::getOpenFileName(this,
+                                                tr("Open file"), "",
+                                                tr("OBJ file (*.obj);;All Files (*)"));
+    QFileInfo fi(path);
+    QString fileName = fi.fileName();
+    Benchmark benchmark;
 
     if (fileName.isEmpty())
         return;
-    this->writeTerminal("Loading \""+fileName+"\" ...");
+
+    this->writeTerminal("Loading "+fileName+" -> ...");
     qApp->processEvents();
-    this->scene->loadFile(fileName.toStdString());
+    benchmark.start();
+    this->scene->loadFile(path.toStdString());
+    this->writeTerminal("Loading "+fileName+" -> "+QString::fromStdString(benchmark.getBenchTime().fullTime_str), true);
+
+    this->writeTerminal("Building collision tree -> ...");
+    qApp->processEvents();
+    benchmark.start();
+    this->scene->buidTree();
+    this->writeTerminal("Building collision tree -> "+QString::fromStdString(benchmark.getBenchTime().fullTime_str), true);
+
     if (this->scene->mesh.collisionTree)
     {
         this->writeTerminal("Success");

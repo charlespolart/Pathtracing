@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cstring>
 #include "Obj3d.h"
 
 class FileImport

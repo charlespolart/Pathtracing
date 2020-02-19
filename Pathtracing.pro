@@ -27,6 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        Benchmark.cpp \
         Camera.cpp \
         CastRay.cpp \
         CollisionTree.cpp \
@@ -45,6 +46,7 @@ SOURCES += \
         MainWindow.cpp
 
 HEADERS += \
+        Benchmark.h \
         Camera.h \
         CastRay.h \
         CollisionTree.h \

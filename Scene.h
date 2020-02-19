@@ -7,6 +7,7 @@
 #include "Obj3d.h"
 #include "FileImport.h"
 #include "CollisionTree.h"
+#include "Benchmark.h"
 
 enum renderingType_e
 {
@@ -29,6 +30,7 @@ public:
 
 public:
     void loadFile(const std::string &path);
+    void buidTree();
 
 private:
     void freeMesh();

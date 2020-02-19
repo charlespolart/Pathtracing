@@ -36,9 +36,6 @@ private:
     GLubyte *pixels;
     GLuint textureId;
     QTimer *update_timer;
-
-public:
-    int currentLine;
 };
 
 #endif //!GLWIDGET_H

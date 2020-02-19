@@ -2,62 +2,50 @@
 
 void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices)
 {
-    std::ifstream file(path);
-    std::string line, code;
+    FILE *file = fopen(path.c_str(), "r");
+    char line[128];
 
-    while (std::getline(file, line))
+    while(fgets(line, sizeof(line), file))
     {
-        std::stringstream sstream(line);
-        sstream >> code;
-        if (code == "o")
+        if (std::strncmp(line, "o", 1) == 0)
         {
+            char name[128];
             obj3ds.emplace_back(new Obj3d());
             obj3ds.back()->vertices = &vertices;
-            sstream >> obj3ds.back()->name;
+            std::sscanf(line+1, "%s\n", name);
+            obj3ds.back()->name = name;
         }
-        else if (code == "v")
+        else if (std::strncmp(line, "v ", 2) == 0)
         {
             Vector3d vect;
-            sstream >> vect.x >> vect.y >> vect.z;
+            std::sscanf(line+1, "%lf %lf %lf\n", &vect.x, &vect.y, &vect.z);
             vertices.v.push_back(vect);
         }
-        else if (code == "vt")
+        else if (std::strncmp(line, "vt ", 3) == 0)
         {
             Vector3d vect;
-            sstream >> vect.x >> vect.y >> vect.z;
+            std::sscanf(line+2, "%lf %lf %lf\n", &vect.x, &vect.y, &vect.z);
             vertices.vt.push_back(vect);
         }
-        else if (code == "vn")
+        else if (std::strncmp(line, "vn ", 3) == 0)
         {
             Vector3d vect;
-            sstream >> vect.x >> vect.y >> vect.z;
+            std::sscanf(line+2, "%lf %lf %lf\n", &vect.x, &vect.y, &vect.z);
             vertices.vn.push_back(vect);
         }
-        else if (code == "f")
+        else if (std::strncmp(line, "f ", 2) == 0)
         {
             face3_t face;
-            std::string line;
 
             if (obj3ds.empty())
             {
                 obj3ds.emplace_back(new Obj3d());
                 obj3ds.back()->vertices = &vertices;
             }
-            for (int i = 0; sstream >> line && i < 3; ++i)
-            {
-                std::string index;
-                std::stringstream tmpstream(line);
-                for (int t = 0; getline(tmpstream, index, '/') && t < 3; ++t)
-                {
-                    if (t == 0)
-                        std::stringstream(index) >> face.indexV[i];
-                    if (t == 1)
-                        std::stringstream(index) >> face.indexVt[i];
-                    if (t == 2)
-                        std::stringstream(index) >> face.indexVn[i];
-                }
-            }
+            if (std::sscanf(line+2, "%d//%d %d//%d %d//%d\n", &face.indexV[0], &face.indexVn[0], &face.indexV[1], &face.indexVn[1], &face.indexV[2], &face.indexVn[2]) != 6)
+                std::sscanf(line+2, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &face.indexV[0], &face.indexVt[0], &face.indexVn[0], &face.indexV[1], &face.indexVt[1], &face.indexVn[1], &face.indexV[2], &face.indexVt[2], &face.indexVn[2]);
             obj3ds.back()->faces3.push_back(face);
         }
     }
+    std::fclose(file);
 }
