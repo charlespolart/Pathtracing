@@ -1,12 +1,37 @@
 #include "FileImport.h"
 
+long FileImport::getLineFromStr(char *src, char *dest, long destSize)
+{
+    long i = 0, t = 0;
+
+    while (src[i] != '\n' && src[i] != '\0')
+    {
+        if (i < destSize)
+        {
+            dest[t] = src[i];
+            t++;
+        }
+        i++;
+    }
+    dest[t] = '\0';
+    return (i);
+}
+
 void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices)
 {
-    FILE *file = fopen(path.c_str(), "r");
+    FILE *fd = std::fopen(path.c_str(), "r");
+    char *file;
     char line[128];
+    long size = 0;
 
-    while(fgets(line, sizeof(line), file))
+    fseek(fd, 0L, SEEK_END);
+    size = ftell(fd);
+    fseek(fd, 0L, SEEK_SET);
+    file = new char[size];
+    std::fread(file, sizeof(char), size, fd);
+    for (long i = 0; i < size; ++i)
     {
+        i += getLineFromStr(file+i, line, sizeof(line));
         if (std::strncmp(line, "o", 1) == 0)
         {
             char name[128];
@@ -47,5 +72,6 @@ void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, 
             obj3ds.back()->faces3.push_back(face);
         }
     }
-    std::fclose(file);
+    delete [] file;
+    std::fclose(fd);
 }
