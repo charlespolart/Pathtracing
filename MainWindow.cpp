@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->resizeWindows();
     connect(this->ui->actionSettings, &QAction::triggered, this->settingsWindow, &SettingsWindow::show);
     connect(this->ui->actionObjects, &QAction::triggered, this->objectsWindow, &ObjectsWindow::show);
+    this->ui->openGL_GLWidget->setScene(this->scene);
+    this->ui->pathtracing_GLWidget->setScene(this->scene);
 }
 
 MainWindow::~MainWindow()
@@ -94,6 +96,7 @@ void MainWindow::on_load3DFile_pushButton_clicked()
         this->writeTerminal("Success");
         this->ui->render_pushButton->setEnabled(true);
         this->objectsWindow->displayObjectsList();
+        this->ui->openGL_GLWidget->init();
     }
     else
         this->writeTerminal("Failed");
@@ -102,17 +105,12 @@ void MainWindow::on_load3DFile_pushButton_clicked()
 void MainWindow::on_render_pushButton_clicked()
 {
     this->disableOptions(true);
-    this->ui->openGLWidget->initWindow(this->scene->camera->width, this->scene->camera->height);
-    this->engine->setPixels(this->ui->openGLWidget->getPixels());
+    this->ui->pathtracing_GLWidget->init();
+    this->engine->setPixels(this->ui->pathtracing_GLWidget->getPixels());
     this->engine->start();
 }
 
 void MainWindow::on_stop_pushButton_clicked()
 {
     this->engine->stop();
-}
-
-void MainWindow::on_comboBox_activated(const QString &arg1)
-{
-    this->scene->renderingType = arg1 == "Raytracing" ? RAYTRACING : PATHTRACING;
 }

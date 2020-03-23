@@ -2,8 +2,7 @@
 
 Scene::Scene() :
     camera(new Camera),
-    totalThreads(std::thread::hardware_concurrency()),
-    renderingType(RAYTRACING)
+    totalThreads(std::thread::hardware_concurrency())
 {
 }
 
@@ -22,8 +21,6 @@ void Scene::freeMesh()
 
 void Scene::loadFile(const std::string &path)
 {
-    Benchmark benchmark;
-
     this->freeMesh();
     FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices);
 }

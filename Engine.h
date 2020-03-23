@@ -6,7 +6,6 @@
 #include <QtOpenGL>
 #include "Scene.h"
 #include "Camera.h"
-#include "Raytracing.h"
 #include "Pathtracing.h"
 #include "Benchmark.h"
 

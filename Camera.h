@@ -22,9 +22,9 @@ public:
     int height;
     Vector3d position;
     Vector3d rotation;
+    double FOV;
 
 private:
-    double FOV;
     double scale;
     double aspectRatio;
     bool inv;

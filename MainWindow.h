@@ -29,7 +29,6 @@ private slots:
     void on_load3DFile_pushButton_clicked();
     void on_render_pushButton_clicked();
     Q_INVOKABLE void on_stop_pushButton_clicked();
-    void on_comboBox_activated(const QString &arg1);
 
 private:
     ObjectsWindow *objectsWindow;

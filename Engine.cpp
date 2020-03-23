@@ -57,7 +57,7 @@ void Engine::putPixel(int x, int y, const Vector3d &c)
     this->pixels[(x + y*this->scene->camera->width)*3 + 2] = static_cast<GLubyte>(color.z*255.0);
 }
 
-void Engine::drawRaytracing(int *current)
+void Engine::drawPathtracing(int *current)
 {
     int y = 0;
 
@@ -74,12 +74,12 @@ void Engine::drawRaytracing(int *current)
         this->render_mutex.unlock();
         for (int x = 0; x < this->scene->camera->width; ++x)
         {
-            this->putPixel(x, y, Raytracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
+            this->putPixel(x, y, Pathtracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
         }
     }
 }
 
-void Engine::drawPathtracing(int *current)
+/*void Engine::drawPathtracing(int *current)
 {
     int y = 0;
 
@@ -98,7 +98,7 @@ void Engine::drawPathtracing(int *current)
             this->putPixel(x, y, Pathtracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
         }
     }
-}
+}*/
 
 void Engine::render()
 {
@@ -114,13 +114,9 @@ void Engine::render()
             render_threads.clear();
             current = 0;
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
-            {
-                render_threads.emplace_back(std::thread((this->scene->renderingType == RAYTRACING ? &Engine::drawRaytracing : &Engine::drawPathtracing), this, &current));
-            }
+                render_threads.emplace_back(std::thread(&Engine::drawPathtracing, this, &current));
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
-            {
                 render_threads[i].join();
-            }
             this->rendering = false;
             QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, QString::fromStdString(benchmark.getBenchTime().fullTime_str)));
             QMetaObject::invokeMethod(this->mainwindow, "disableOptions", Qt::AutoConnection, Q_ARG(bool, false));

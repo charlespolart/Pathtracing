@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 Camera::Camera() :
-    position(0.0, 0.0, -3.0)
+    position(0.0, 0.0, 3.0)
 {
     this->setWidth(480);
     this->setHeight(360);
@@ -42,7 +42,7 @@ Ray Camera::initRay(int x, int y) const
         direction.x = (2.0 * ((x + 0.5) / this->width) - 1.0) * this->scale;
         direction.y = (1.0 - 2.0 * ((y + 0.5) / this->height)) * this->scale * this->aspectRatio;
     }
-    direction.z = 1.0;
+    direction.z = -1.0;
     direction.rotation(this->rotation);
     return (Ray(this->position, direction));
 }

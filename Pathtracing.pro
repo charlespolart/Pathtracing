@@ -6,7 +6,7 @@
 
 QT       += core gui opengl
 
-LIBS += -lopengl32
+LIBS += -lopengl32 -lglu32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -33,15 +33,15 @@ SOURCES += \
         CollisionTree.cpp \
         Engine.cpp \
         FileImport.cpp \
+        GLWidgetOpenGL.cpp \
+        GLWidgetPathtracing.cpp \
         Material.cpp \
         Obj3d.cpp \
         ObjectsWindow.cpp \
         Pathtracing.cpp \
-        Raytracing.cpp \
         Scene.cpp \
         SettingsWindow.cpp \
         Vector.cpp \
-        GLWidget.cpp \
         main.cpp \
         MainWindow.cpp
 
@@ -52,17 +52,17 @@ HEADERS += \
         CollisionTree.h \
         Engine.h \
         FileImport.h \
+        GLWidgetOpenGL.h \
+        GLWidgetPathtracing.h \
         MainWindow.h \
         Material.h \
         Obj3d.h \
         ObjectsWindow.h \
         Pathtracing.h \
         Ray.h \
-        Raytracing.h \
         Scene.h \
         SettingsWindow.h \
-        Vector.h \
-        GLWidget.h
+        Vector.h
 
 FORMS += \
         mainwindow.ui \
