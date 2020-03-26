@@ -23,10 +23,10 @@ public:
     Vector3d position;
     Vector3d rotation;
     double FOV;
+    double aspectRatio;
 
 private:
     double scale;
-    double aspectRatio;
     bool inv;
 };
 

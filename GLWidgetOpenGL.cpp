@@ -3,15 +3,17 @@
 GLWidgetOpenGL::GLWidgetOpenGL(QWidget *parent) :
     QOpenGLWidget(parent),
     scene(nullptr),
-    update_timer(new QTimer(this)),
+    deltaTime(0.0),
+    lastMouseX(0),
+    lastMouseY(0),
     indices(nullptr),
     indices_size(0),
     vbo_vertices_id(0),
     vbo_normals_id(0),
     vbo_indices_id(0)
 {
-    connect(this->update_timer, SIGNAL(timeout()), this, SLOT(update_timeOut()));
-    this->update_timer->start(1000/FPS);
+    connect(&this->update_timer, SIGNAL(timeout()), this, SLOT(update_timeout()));
+    this->update_timer.start(1000/FPS);
 }
 
 GLWidgetOpenGL::~GLWidgetOpenGL()
@@ -24,13 +26,74 @@ GLWidgetOpenGL::~GLWidgetOpenGL()
         glDeleteBuffers(1, &vbo_indices_id);
     if (this->indices)
         delete [] this->indices;
-    delete this->update_timer;
+}
+
+void GLWidgetOpenGL::mousePressEvent(QMouseEvent *e)
+{
+    this->lastMouseX = e->x();
+    this->lastMouseY = e->y();
+    if (e->button() == Qt::LeftButton)
+    {
+        this->lastRotation = this->scene->camera->rotation;
+        this->inputs.leftButton = true;
+    }
+    if (e->button() == Qt::RightButton)
+    {
+        this->lastPosition = this->scene->camera->position;
+        this->inputs.rightButton = true;
+    }
+}
+
+void GLWidgetOpenGL::mouseReleaseEvent(QMouseEvent *e)
+{
+    if (e->button() == Qt::LeftButton)
+        this->inputs.leftButton = false;
+    if (e->button() == Qt::RightButton)
+        this->inputs.rightButton = false;
+}
+
+void GLWidgetOpenGL::mouseMoveEvent(QMouseEvent *e)
+{
+    int mouseDeltaX = (e->x() - this->lastMouseX);
+    int mouseDeltaY = (e->y() - this->lastMouseY);
+
+    if (this->inputs.leftButton)
+    {
+        this->scene->camera->rotation.x = this->lastRotation.x - mouseDeltaY * 0.1;
+        this->scene->camera->rotation.y = this->lastRotation.y - mouseDeltaX * 0.1;
+        QMetaObject::invokeMethod(this->settingsWindow, "updateValues", Qt::AutoConnection);
+    }
+    if (this->inputs.rightButton)
+    {
+        Vector3d up(0.0, mouseDeltaY * 0.01, 0.0);
+        Vector3d right(mouseDeltaX * 0.01, 0.0, 0.0);
+        up.rotation(this->scene->camera->rotation);
+        right.rotation(this->scene->camera->rotation);
+        this->scene->camera->position = this->lastPosition + up - right;
+        QMetaObject::invokeMethod(this->settingsWindow, "updateValues", Qt::AutoConnection);
+    }
+}
+
+void GLWidgetOpenGL::wheelEvent(QWheelEvent *e)
+{
+    Vector3d forward(0.0, 0.0, 1.0);
+
+    forward.rotation(this->scene->camera->rotation);
+    if (e->angleDelta().ry() > 0)
+        this->scene->camera->position -= forward;
+    else if (e->angleDelta().ry() < 0)
+        this->scene->camera->position += forward;
+    QMetaObject::invokeMethod(this->settingsWindow, "updateValues", Qt::AutoConnection);
+}
+
+void GLWidgetOpenGL::setSettingsWindow(SettingsWindow *settingsWindow)
+{
+    this->settingsWindow = settingsWindow;
 }
 
 void GLWidgetOpenGL::setScene(Scene *scene)
 {
     this->scene = scene;
-    std::cout << "OwO" << std::endl;
 }
 
 void GLWidgetOpenGL::init()
@@ -89,20 +152,10 @@ void GLWidgetOpenGL::initializeGL()
     glEnable(GL_LIGHT0);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-    /*gluLookAt(this->scene->camera->position.x,
-              this->scene->camera->position.y,
-              this->scene->camera->position.z,
-              0.0, 0.0, 0.0,
-              0.0, 1.0, 0.0);*/
 
     GLfloat diffuse[] = {0.8f, 0.8f, 0.8f, 1.0f};
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(static_cast<float>(this->scene->camera->FOV), this->scene->camera->width/this->scene->camera->height, 0.1f, 100.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -114,16 +167,24 @@ void GLWidgetOpenGL::resizeGL(int width, int height)
 
 void GLWidgetOpenGL::paintGL()
 {
+    this->deltaTime = this->frame_time.elapsed() / 1000.0;
+    this->frame_time.start();
+
     double ratio = qMin(static_cast<double>(this->width())/static_cast<double>(this->scene->camera->width),
                         static_cast<double>(this->height())/static_cast<double>(this->scene->camera->height));
     GLint width = static_cast<GLint>(this->scene->camera->width*ratio), height = static_cast<GLint>(this->scene->camera->height*ratio);
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(this->scene->camera->FOV, this->scene->camera->aspectRatio, 0.1, 100.0);
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //glRotated(180.0, 0.0, 1.0, 0.0);
-    glTranslated(-this->scene->camera->position.x, -this->scene->camera->position.y, -this->scene->camera->position.z);
-
     glViewport((this->width()-width)/2, (this->height()-height)/2, width, height);
+    glRotated(this->scene->camera->rotation.x, 1.0, 0.0, 0.0);
+    glRotated(this->scene->camera->rotation.y, 0.0, 1.0, 0.0);
+    glRotated(this->scene->camera->rotation.z, 0.0, 0.0, 1.0);
+    glTranslated(-this->scene->camera->position.x, -this->scene->camera->position.y, -this->scene->camera->position.z);
 
     glBindBuffer(GL_ARRAY_BUFFER, this->vbo_vertices_id);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -142,7 +203,7 @@ void GLWidgetOpenGL::paintGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void GLWidgetOpenGL::update_timeOut()
+void GLWidgetOpenGL::update_timeout()
 {
     this->update();
 }

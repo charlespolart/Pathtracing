@@ -22,7 +22,7 @@ public:
 private:
     void closeEvent(QCloseEvent *event);
     void resizeWindows();
-    Q_INVOKABLE void disableOptions(bool status);
+    void disableOptions(bool status);
     Q_INVOKABLE void writeTerminal(const QString &str, bool replace = false);
 
 private slots:

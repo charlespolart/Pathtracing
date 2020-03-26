@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->resizeWindows();
     connect(this->ui->actionSettings, &QAction::triggered, this->settingsWindow, &SettingsWindow::show);
     connect(this->ui->actionObjects, &QAction::triggered, this->objectsWindow, &ObjectsWindow::show);
+    this->ui->openGL_GLWidget->setSettingsWindow(this->settingsWindow);
     this->ui->openGL_GLWidget->setScene(this->scene);
     this->ui->pathtracing_GLWidget->setScene(this->scene);
 }
@@ -113,4 +114,6 @@ void MainWindow::on_render_pushButton_clicked()
 void MainWindow::on_stop_pushButton_clicked()
 {
     this->engine->stop();
+    this->disableOptions(false);
+    this->ui->pathtracing_GLWidget->stop();
 }

@@ -21,6 +21,7 @@ public:
 public:
     GLubyte *getPixels() const;
     void setScene(Scene *scene);
+    void stop();
 
 public:
     void init();
@@ -31,11 +32,13 @@ protected:
     void paintGL();
 
 private slots:
-  void update_timeOut();
+  void update_timeout();
 
 private:
     Scene *scene;
-    QTimer *update_timer;
+    QTimer update_timer;
+    int currentWidth, currentHeight;
+    bool rendering;
 
     GLubyte *pixels;
     GLuint texture_id;

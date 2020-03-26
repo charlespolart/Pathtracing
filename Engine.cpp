@@ -119,7 +119,7 @@ void Engine::render()
                 render_threads[i].join();
             this->rendering = false;
             QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, QString::fromStdString(benchmark.getBenchTime().fullTime_str)));
-            QMetaObject::invokeMethod(this->mainwindow, "disableOptions", Qt::AutoConnection, Q_ARG(bool, false));
+            QMetaObject::invokeMethod(this->mainwindow, "on_stop_pushButton_clicked", Qt::AutoConnection);
         }
         Sleep(10);
     }

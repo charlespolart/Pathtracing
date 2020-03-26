@@ -656,6 +656,10 @@ debug/moc_GLWidgetOpenGL.cpp: GLWidgetOpenGL.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qglshaderprogram.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qtopenglversion.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QGLWidget \
+		MainWindow.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QMainWindow \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QFileDialog \
+		SettingsWindow.h \
 		Scene.h \
 		Camera.h \
 		Vector.h \
@@ -665,6 +669,10 @@ debug/moc_GLWidgetOpenGL.cpp: GLWidgetOpenGL.h \
 		FileImport.h \
 		CollisionTree.h \
 		Benchmark.h \
+		ObjectsWindow.h \
+		Engine.h \
+		Pathtracing.h \
+		CastRay.h \
 		debug/moc_predefs.h \
 		../../../../Qt/5.12.1/mingw73_64/bin/moc.exe
 	C:\Qt\5.12.1\mingw73_64\bin\moc.exe $(DEFINES) --include "C:/Users/Charles Polart/Documents/Pathtracing/debug/moc_predefs.h" -IC:/Qt/5.12.1/mingw73_64/mkspecs/win32-g++ -I"C:/Users/Charles Polart/Documents/Pathtracing" -IC:/Qt/5.12.1/mingw73_64/include -IC:/Qt/5.12.1/mingw73_64/include/QtOpenGL -IC:/Qt/5.12.1/mingw73_64/include/QtWidgets -IC:/Qt/5.12.1/mingw73_64/include/QtGui -IC:/Qt/5.12.1/mingw73_64/include/QtANGLE -IC:/Qt/5.12.1/mingw73_64/include/QtCore -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\ATLMFC\include" -I"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\include" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\ucrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\shared" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\um" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\winrt" -I"C:\Program Files (x86)\Windows Kits\10\include\10.0.17763.0\cppwinrt" GLWidgetOpenGL.h -o debug\moc_GLWidgetOpenGL.cpp
@@ -2861,6 +2869,10 @@ ui_mainwindow.h: mainwindow.ui \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qglshaderprogram.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qtopenglversion.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QGLWidget \
+		MainWindow.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QMainWindow \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QFileDialog \
+		SettingsWindow.h \
 		Scene.h \
 		Camera.h \
 		Vector.h \
@@ -2869,7 +2881,11 @@ ui_mainwindow.h: mainwindow.ui \
 		Material.h \
 		FileImport.h \
 		CollisionTree.h \
-		Benchmark.h
+		Benchmark.h \
+		ObjectsWindow.h \
+		Engine.h \
+		Pathtracing.h \
+		CastRay.h
 	C:\Qt\5.12.1\mingw73_64\bin\uic.exe mainwindow.ui -o ui_mainwindow.h
 
 ui_objectswindow.h: objectswindow.ui \
@@ -3886,6 +3902,10 @@ debug/GLWidgetOpenGL.o: GLWidgetOpenGL.cpp GLWidgetOpenGL.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qglshaderprogram.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qtopenglversion.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QGLWidget \
+		MainWindow.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QMainWindow \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QFileDialog \
+		SettingsWindow.h \
 		Scene.h \
 		Camera.h \
 		Vector.h \
@@ -3894,7 +3914,11 @@ debug/GLWidgetOpenGL.o: GLWidgetOpenGL.cpp GLWidgetOpenGL.h \
 		Material.h \
 		FileImport.h \
 		CollisionTree.h \
-		Benchmark.h
+		Benchmark.h \
+		ObjectsWindow.h \
+		Engine.h \
+		Pathtracing.h \
+		CastRay.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\GLWidgetOpenGL.o GLWidgetOpenGL.cpp
 
 debug/GLWidgetPathtracing.o: GLWidgetPathtracing.cpp GLWidgetPathtracing.h \
@@ -4507,41 +4531,7 @@ debug/ObjectsWindow.o: ObjectsWindow.cpp ObjectsWindow.h \
 		FileImport.h \
 		CollisionTree.h \
 		Benchmark.h \
-		ui_objectswindow.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/QVariant \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QApplication \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qeventloop.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qguiapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qinputmethod.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QGridLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QListWidget \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlistwidget.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlistview.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractitemview.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qframe.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qabstractitemmodel.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qitemselectionmodel.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractitemdelegate.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qstyleoption.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractspinbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qvalidator.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qregularexpression.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qicon.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qslider.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractslider.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qstyle.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qtabbar.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qtabwidget.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qrubberband.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QSpacerItem
+		ui_objectswindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ObjectsWindow.o ObjectsWindow.cpp
 
 debug/Pathtracing.o: Pathtracing.cpp Pathtracing.h \
@@ -4681,41 +4671,7 @@ debug/SettingsWindow.o: SettingsWindow.cpp SettingsWindow.h \
 		FileImport.h \
 		CollisionTree.h \
 		Benchmark.h \
-		ui_settingswindow.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/QVariant \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QApplication \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qcoreapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qeventloop.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qdesktopwidget.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qguiapplication.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qinputmethod.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QDoubleSpinBox \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qspinbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qabstractspinbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qvalidator.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtCore/qregularexpression.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QFormLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qformlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlayoutitem.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qboxlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qgridlayout.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QFrame \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qframe.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QGridLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QGroupBox \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qgroupbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QHBoxLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QLabel \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qlabel.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QSpacerItem \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QSpinBox \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QTabWidget \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qtabwidget.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qicon.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QVBoxLayout
+		ui_settingswindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\SettingsWindow.o SettingsWindow.cpp
 
 debug/Vector.o: Vector.cpp Vector.h
@@ -5708,19 +5664,7 @@ debug/MainWindow.o: MainWindow.cpp MainWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/qtopenglversion.h \
 		Pathtracing.h \
 		CastRay.h \
-		ui_mainwindow.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QAction \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QApplication \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QGridLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QHBoxLayout \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QListWidget \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QMenu \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QMenuBar \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QPushButton \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QSpacerItem \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QSplitter \
-		GLWidgetPathtracing.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QGLWidget
+		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\MainWindow.o MainWindow.cpp
 
 debug/moc_GLWidgetOpenGL.o: debug/moc_GLWidgetOpenGL.cpp 

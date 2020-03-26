@@ -7,6 +7,16 @@ SettingsWindow::SettingsWindow(Scene *scene, QWidget *parent) :
     scene(scene)
 {
     ui->setupUi(this);
+    this->updateValues();
+}
+
+SettingsWindow::~SettingsWindow()
+{
+    delete ui;
+}
+
+void SettingsWindow::updateValues()
+{
     this->ui->width_spinBox->setValue(this->scene->camera->width);
     this->ui->height_spinBox->setValue(this->scene->camera->height);
     this->ui->cameraPositionX_doubleSpinBox->setValue(this->scene->camera->position.x);
@@ -15,11 +25,6 @@ SettingsWindow::SettingsWindow(Scene *scene, QWidget *parent) :
     this->ui->cameraRotationX_doubleSpinBox->setValue(this->scene->camera->rotation.x);
     this->ui->cameraRotationY_doubleSpinBox->setValue(this->scene->camera->rotation.y);
     this->ui->cameraRotationZ_doubleSpinBox->setValue(this->scene->camera->rotation.z);
-}
-
-SettingsWindow::~SettingsWindow()
-{
-    delete ui;
 }
 
 void SettingsWindow::on_width_spinBox_editingFinished()

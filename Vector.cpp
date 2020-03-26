@@ -40,19 +40,13 @@ double Vector3d::dotProduct(const Vector3d &v) const
 
 void Vector3d::rotationX(double angle)
 {
-  Vector3d mat1;
-  Vector3d mat2;
-  Vector3d mat3;
-  Vector3d tmp;
-  double angleTmp;
-
   if (angle < 0.0 || angle > 0.0)
     {
-      angleTmp = (M_PI * angle) / 180.0;
-      mat1 = Vector3d(1.0, 0.0, 0.0);
-      mat2 = Vector3d(0.0, std::cos(angleTmp), -std::sin(angleTmp));
-      mat3 = Vector3d(0.0, std::sin(angleTmp), std::cos(angleTmp));
-      tmp = *this;
+      angle = (M_PI * -angle) / 180.0;
+      Vector3d mat1 = Vector3d(1.0, 0.0, 0.0);
+      Vector3d mat2 = Vector3d(0.0, std::cos(angle), -std::sin(angle));
+      Vector3d mat3 = Vector3d(0.0, std::sin(angle), std::cos(angle));
+      Vector3d tmp = *this;
       this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
       this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
       this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;
@@ -61,19 +55,13 @@ void Vector3d::rotationX(double angle)
 
 void Vector3d::rotationY(double angle)
 {
-  Vector3d mat1;
-  Vector3d mat2;
-  Vector3d mat3;
-  Vector3d tmp;
-  double angleTmp;
-
   if (angle < 0.0 || angle > 0.0)
     {
-      angleTmp = (M_PI * angle) / 180.0;
-      mat1 = Vector3d(std::cos(angleTmp), 0.0, -std::sin(angleTmp));
-      mat2 = Vector3d(0.0, 1.0, 0.0);
-      mat3 = Vector3d(std::sin(angleTmp), 0.0, std::cos(angleTmp));
-      tmp = *this;
+      angle = (M_PI * angle) / 180.0;
+      Vector3d mat1 = Vector3d(std::cos(angle), 0.0, -std::sin(angle));
+      Vector3d mat2 = Vector3d(0.0, 1.0, 0.0);
+      Vector3d mat3 = Vector3d(std::sin(angle), 0.0, std::cos(angle));
+      Vector3d tmp = *this;
       this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
       this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
       this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;
@@ -82,19 +70,13 @@ void Vector3d::rotationY(double angle)
 
 void Vector3d::rotationZ(double angle)
 {
-  Vector3d mat1;
-  Vector3d mat2;
-  Vector3d mat3;
-  Vector3d tmp;
-  double angleTmp;
-
   if (angle < 0.0 || angle > 0.0)
     {
-      angleTmp = (M_PI * angle) / 180.0;
-      mat1 = Vector3d(std::cos(angleTmp), -std::sin(angleTmp), 0.0);
-      mat2 = Vector3d(std::sin(angleTmp), std::cos(angleTmp), 0.0);
-      mat3 = Vector3d(0.0, 0.0, 1.0);
-      tmp = *this;
+      angle = (M_PI * angle) / 180.0;
+      Vector3d mat1 = Vector3d(std::cos(angle), -std::sin(angle), 0.0);
+      Vector3d mat2 = Vector3d(std::sin(angle), std::cos(angle), 0.0);
+      Vector3d mat3 = Vector3d(0.0, 0.0, 1.0);
+      Vector3d tmp = *this;
       this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
       this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
       this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;

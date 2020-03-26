@@ -16,6 +16,9 @@ public:
     explicit SettingsWindow(Scene *scene, QWidget *parent = nullptr);
     ~SettingsWindow();
 
+private:
+    Q_INVOKABLE void updateValues();
+
 private slots:
     void on_width_spinBox_editingFinished();
     void on_height_spinBox_editingFinished();

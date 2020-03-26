@@ -142,7 +142,7 @@ Vector3d CastRay::normalInterpolation(const collisionData_t &collisionData)
     Vector3d iVn;
 
     iVn = (collisionData.vn1*u + collisionData.vn2*v + collisionData.vn0*w);
-    iVn.normalise();
+    //iVn.normalise();
     return (iVn);
 }
 
