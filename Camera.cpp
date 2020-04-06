@@ -28,7 +28,7 @@ void Camera::setFOV(int FOV)
     this->scale = std::tan(this->FOV/2.0 * M_PI / 180.0);
 }
 
-Ray Camera::initRay(int x, int y) const
+Ray Camera::initRay(double x, double y) const
 {
     Vector3d direction;
 

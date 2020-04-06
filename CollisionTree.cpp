@@ -106,6 +106,8 @@ void CollisionTree::buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<
     while (true)
     {
         index_mutex.lock();
+        if (obj3ds[i]->collisionTree)
+            trees.push_back(static_cast<treeNode_t *>(obj3ds[i]->collisionTree));
         if (*index >= obj3ds.size())
         {
             index_mutex.unlock();
@@ -115,7 +117,6 @@ void CollisionTree::buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<
         (*index)++;
         index_mutex.unlock();
         obj3ds[i]->collisionTree = CollisionTree::buildTreeLeafs(obj3ds[i]);
-        trees.push_back(static_cast<treeNode_t *>(obj3ds[i]->collisionTree));
     }
 }
 

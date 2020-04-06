@@ -1,7 +1,8 @@
 #include "Material.h"
 
 Material::Material() :
-    color(Vector3d(1.0, 1.0, 1.0))
+    name(""),
+    color(Vector3d(1.0, 1.0, 1.0)),
+    emission(0.0)
 {
-
 }

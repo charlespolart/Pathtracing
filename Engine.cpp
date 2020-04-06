@@ -6,8 +6,10 @@ Engine::Engine(QMainWindow *mainwindow) :
     exit(false),
     scene(new Scene()),
     pixels(nullptr),
+    pixelsData(nullptr),
     engine_thread(std::thread(&Engine::render, this))
 {
+    std::srand(std::time(NULL));
 }
 
 Engine::~Engine()
@@ -57,7 +59,7 @@ void Engine::putPixel(int x, int y, const Vector3d &c)
     this->pixels[(x + y*this->scene->camera->width)*3 + 2] = static_cast<GLubyte>(color.z*255.0);
 }
 
-void Engine::drawPathtracing(int *current)
+void Engine::drawPathtracing(int *current, int *sample)
 {
     int y = 0;
 
@@ -66,45 +68,38 @@ void Engine::drawPathtracing(int *current)
         this->render_mutex.lock();
         if (*current >= this->scene->camera->height)
         {
-            this->render_mutex.unlock();
-            break;
+            if (this->scene->samples ? *sample >= this->scene->samples : 0)
+            {
+                this->render_mutex.unlock();
+                return;
+            }
+            *current = 0;
+            (*sample)++;
+            QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, "Sample ["+QString::number(*sample)+(this->scene->samples ? "/"+QString::number(this->scene->samples)+"]" : "]")), Q_ARG(bool, true));
         }
         y = *current;
         (*current)++;
         this->render_mutex.unlock();
         for (int x = 0; x < this->scene->camera->width; ++x)
         {
-            this->putPixel(x, y, Pathtracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
+            double xRand = static_cast<double>(std::rand()) / RAND_MAX, yRand = static_cast<double>(std::rand()) / RAND_MAX;
+            //Vector3d color = Pathtracing::render(this->scene->camera->initRay(x + xRand, y + yRand), this->scene, Vector2i(x, y));
+            Vector3d color = Pathtracing::render(this->scene->camera->initRay(x + xRand, y + yRand), this->scene, 0);
+            if (color != 0)
+                this->pixelsData[x+y*this->scene->camera->width].color += color;
+            this->putPixel(x, y, this->pixelsData[x+y*this->scene->camera->width].color / this->pixelsData[x+y*this->scene->camera->width].samples);
+            if (color != 0)
+                this->pixelsData[x+y*this->scene->camera->width].samples++;
         }
     }
 }
-
-/*void Engine::drawPathtracing(int *current)
-{
-    int y = 0;
-
-    while (this->rendering)
-    {
-        this->render_mutex.lock();
-        if (*current >= this->scene->camera->height)
-        {
-            *current = 0;
-        }
-        y = *current;
-        (*current)++;
-        this->render_mutex.unlock();
-        for (int x = 0; x < this->scene->camera->width; ++x)
-        {
-            this->putPixel(x, y, Pathtracing::render(this->scene->camera->initRay(x, y), this->scene, Vector2i(x, y)));
-        }
-    }
-}*/
 
 void Engine::render()
 {
     std::vector<std::thread> render_threads;
     Benchmark benchmark;
     int current = 0;
+    int sample = 1;
 
     while (!this->exit)
     {
@@ -113,8 +108,13 @@ void Engine::render()
             benchmark.start();
             render_threads.clear();
             current = 0;
+            sample = 1;
+            if (this->pixelsData)
+                delete [] this->pixelsData;
+            this->pixelsData = new pixelData_t[this->scene->camera->width * this->scene->camera->height];
+            QMetaObject::invokeMethod(this->mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, "Sample ["+QString::number(sample)+(this->scene->samples ? "/"+QString::number(this->scene->samples)+"]" : "]")), Q_ARG(bool, false));
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
-                render_threads.emplace_back(std::thread(&Engine::drawPathtracing, this, &current));
+                render_threads.emplace_back(std::thread(&Engine::drawPathtracing, this, &current, &sample));
             for (size_t i = 0; i < this->scene->totalThreads; ++i)
                 render_threads[i].join();
             this->rendering = false;

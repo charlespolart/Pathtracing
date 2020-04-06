@@ -5,18 +5,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    this->ui->setupUi(this);
     this->engine = new Engine(this);
     this->scene = this->engine->getScene();
     this->settingsWindow = new SettingsWindow(this->scene);
     this->objectsWindow = new ObjectsWindow(this->scene);
-    this->settingsWindow->show();
-    this->objectsWindow->show();
-    this->ui->setupUi(this);
-    this->resizeWindows();
-    connect(this->ui->actionSettings, &QAction::triggered, this->settingsWindow, &SettingsWindow::show);
-    connect(this->ui->actionObjects, &QAction::triggered, this->objectsWindow, &ObjectsWindow::show);
+    this->ui->settings_gridWidget->layout()->addWidget(this->settingsWindow);
+    this->ui->objects_gridWidget->layout()->addWidget(this->objectsWindow);
     this->ui->openGL_GLWidget->setSettingsWindow(this->settingsWindow);
     this->ui->openGL_GLWidget->setScene(this->scene);
+    this->ui->openGL_GLWidget->setDisabled(true);
     this->ui->pathtracing_GLWidget->setScene(this->scene);
 }
 
@@ -35,27 +33,26 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->accept();
 }
 
-void MainWindow::resizeWindows()
+void MainWindow::keyPressEvent(QKeyEvent *e)
 {
-    QDesktopWidget desktop;
-    QRect screenSize = desktop.availableGeometry(this);
-    int titleBarHeight = QApplication::style()->pixelMetric(QStyle::PM_TitleBarHeight);
-    int width = screenSize.width();
-    int height = screenSize.height() - titleBarHeight;
-    double mainWindowWidthRatio = 0.6;
+    static bool status = false;
 
-    this->resize(width*mainWindowWidthRatio, height);
-    this->move(width*(1.0-mainWindowWidthRatio)/2.0, 0);
-    this->settingsWindow->resize(width*(1.0-mainWindowWidthRatio)/2.0, height);
-    this->settingsWindow->move(0, 0);
-    this->objectsWindow->resize(width*(1.0-mainWindowWidthRatio)/2.0, height);
-    this->objectsWindow->move(width*((1.0-mainWindowWidthRatio)/2.0+mainWindowWidthRatio), 0);
+    if (e->key() == Qt::Key::Key_Escape)
+    {
+        ((QWidget *)this->settingsWindow->parent())->setVisible(status);
+        ((QWidget *)this->objectsWindow->parent())->setVisible(status);
+        status = !status;
+    }
 }
 
 void MainWindow::disableOptions(bool status)
 {
+    this->ui->menuBar->setDisabled(status);
     this->ui->render_pushButton->setDisabled(status);
     this->ui->stop_pushButton->setEnabled(status);
+    this->settingsWindow->setDisabled(status);
+    this->objectsWindow->setDisabled(status);
+    this->ui->openGL_GLWidget->setDisabled(status);
 }
 
 void MainWindow::writeTerminal(const QString &str, bool replace)
@@ -68,7 +65,7 @@ void MainWindow::writeTerminal(const QString &str, bool replace)
         this->ui->terminal_listWidget->scrollToItem(this->ui->terminal_listWidget->item(this->ui->terminal_listWidget->count()-1));
 }
 
-void MainWindow::on_load3DFile_pushButton_clicked()
+void MainWindow::on_actionImport_obj_triggered()
 {
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open file"), "",
@@ -97,6 +94,7 @@ void MainWindow::on_load3DFile_pushButton_clicked()
         this->writeTerminal("Success");
         this->ui->render_pushButton->setEnabled(true);
         this->objectsWindow->displayObjectsList();
+        this->ui->openGL_GLWidget->setEnabled(true);
         this->ui->openGL_GLWidget->init();
     }
     else

@@ -2,6 +2,8 @@
 
 Scene::Scene() :
     camera(new Camera),
+    samples(0),
+    maxDepth(5),
     totalThreads(std::thread::hardware_concurrency())
 {
 }
@@ -9,6 +11,8 @@ Scene::Scene() :
 Scene::~Scene()
 {
     this->freeMesh();
+    for (size_t i = 0; i < this->mesh.materials.size(); ++i)
+        delete this->mesh.materials[i];
     delete this->camera;
 }
 
@@ -22,7 +26,7 @@ void Scene::freeMesh()
 void Scene::loadFile(const std::string &path)
 {
     this->freeMesh();
-    FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices);
+    FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices, &this->mesh.defaultMaterial);
 }
 
 void Scene::buidTree()

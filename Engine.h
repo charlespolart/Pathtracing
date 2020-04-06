@@ -9,6 +9,12 @@
 #include "Pathtracing.h"
 #include "Benchmark.h"
 
+struct pixelData_t
+{
+    Vector3d color;
+    int samples = 1;
+};
+
 class Engine
 {
 public:
@@ -26,10 +32,7 @@ public:
 
 private:
     void putPixel(int x, int y, const Vector3d &c);
-    Vector3d raytracing(const Ray &);
-    Vector3d pathtracing(const Ray &);
-    void drawRaytracing(int *current);
-    void drawPathtracing(int *current);
+    void drawPathtracing(int *current, int *sample);
     void displayRenderTime(long long time);
     void render();
 
@@ -39,6 +42,7 @@ private:
     bool exit;
     Scene *scene;
     GLubyte *pixels;
+    pixelData_t *pixelsData;
     std::mutex render_mutex;
     std::thread engine_thread;
 };

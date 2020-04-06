@@ -1,11 +1,12 @@
 #include "Obj3d.h"
 
 Obj3d::Obj3d() :
-    material(new Material())
+    vertices(nullptr),
+    collisionTree(nullptr),
+    material(nullptr)
 {
 }
 
 Obj3d::~Obj3d()
 {
-    delete this->material;
 }

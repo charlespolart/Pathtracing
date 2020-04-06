@@ -21,12 +21,13 @@ public:
 
 private:
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent *e);
     void resizeWindows();
     void disableOptions(bool status);
     Q_INVOKABLE void writeTerminal(const QString &str, bool replace = false);
 
 private slots:
-    void on_load3DFile_pushButton_clicked();
+    void on_actionImport_obj_triggered();
     void on_render_pushButton_clicked();
     Q_INVOKABLE void on_stop_pushButton_clicked();
 

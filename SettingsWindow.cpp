@@ -25,6 +25,7 @@ void SettingsWindow::updateValues()
     this->ui->cameraRotationX_doubleSpinBox->setValue(this->scene->camera->rotation.x);
     this->ui->cameraRotationY_doubleSpinBox->setValue(this->scene->camera->rotation.y);
     this->ui->cameraRotationZ_doubleSpinBox->setValue(this->scene->camera->rotation.z);
+    this->ui->maxDepth_spinBox->setValue(this->scene->maxDepth);
 }
 
 void SettingsWindow::on_width_spinBox_editingFinished()
@@ -86,4 +87,15 @@ void SettingsWindow::on_cameraRotationZ_doubleSpinBox_valueChanged(double value)
         value += 360.0;
     this->ui->cameraRotationZ_doubleSpinBox->setValue(value);
     this->scene->camera->rotation.z = value;
+}
+
+void SettingsWindow::on_maxSamples_spinBox_valueChanged(int value)
+{
+    this->scene->samples = value;
+
+}
+
+void SettingsWindow::on_maxDepth_spinBox_valueChanged(int value)
+{
+    this->scene->maxDepth = value;
 }

@@ -15,7 +15,7 @@ public:
     void setHeight(int height);
     void setFOV(int FOV);
 
-    Ray initRay(int x, int y) const;
+    Ray initRay(double x, double y) const;
 
 public:
     int width;

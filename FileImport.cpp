@@ -17,7 +17,7 @@ long FileImport::getLineFromStr(char *src, char *dest, long destSize)
     return (i);
 }
 
-void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices)
+void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices, Material *defaultMaterial)
 {
     FILE *fd = std::fopen(path.c_str(), "r");
     char *file;
@@ -39,6 +39,7 @@ void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, 
             obj3ds.back()->vertices = &vertices;
             std::sscanf(line+1, "%s\n", name);
             obj3ds.back()->name = name;
+            obj3ds.back()->material = defaultMaterial;
         }
         else if (std::strncmp(line, "v ", 2) == 0)
         {

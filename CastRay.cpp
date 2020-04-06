@@ -142,7 +142,7 @@ Vector3d CastRay::normalInterpolation(const collisionData_t &collisionData)
     Vector3d iVn;
 
     iVn = (collisionData.vn1*u + collisionData.vn2*v + collisionData.vn0*w);
-    //iVn.normalise();
+    iVn.normalise();
     return (iVn);
 }
 
@@ -150,10 +150,10 @@ bool CastRay::castRay(const Ray &ray, const treeNode_t *node, collisionData_t &c
 {
     CastRay::browseTree(ray, node, collisionData);
     if (collisionData.t <= 0.0)
-    {
         return (false);
-    }
     collisionData.position = ray.origin + ray.direction*collisionData.t;
     collisionData.normal = CastRay::normalInterpolation(collisionData);
+    if (ray.direction.dotProduct(collisionData.normal) >= 0.0)
+        collisionData.normal *= -1.0;
     return (true);
 }

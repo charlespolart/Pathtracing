@@ -13,6 +13,8 @@ struct mesh_t
 {
     vertices_t vertices;
     std::vector<Obj3d *> objs;
+    std::vector<Material *> materials;
+    Material defaultMaterial;
     treeNode_t *collisionTree = nullptr;
 };
 
@@ -32,6 +34,8 @@ private:
 public:
     Camera *camera;
     struct mesh_t mesh;
+    int samples;
+    int maxDepth;
     size_t totalThreads;
 };
 

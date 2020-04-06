@@ -28,6 +28,8 @@ private slots:
     void on_cameraRotationX_doubleSpinBox_valueChanged(double value);
     void on_cameraRotationY_doubleSpinBox_valueChanged(double value);
     void on_cameraRotationZ_doubleSpinBox_valueChanged(double value);
+    void on_maxSamples_spinBox_valueChanged(int value);
+    void on_maxDepth_spinBox_valueChanged(int value);
 
 private:
     Ui::SettingsWindow *ui;

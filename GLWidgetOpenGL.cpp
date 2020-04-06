@@ -81,7 +81,7 @@ void GLWidgetOpenGL::wheelEvent(QWheelEvent *e)
     forward.rotation(this->scene->camera->rotation);
     if (e->angleDelta().ry() > 0)
         this->scene->camera->position -= forward;
-    else if (e->angleDelta().ry() < 0)
+    if (e->angleDelta().ry() < 0)
         this->scene->camera->position += forward;
     QMetaObject::invokeMethod(this->settingsWindow, "updateValues", Qt::AutoConnection);
 }

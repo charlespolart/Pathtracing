@@ -68,6 +68,7 @@ void GLWidgetPathtracing::paintGL()
 
     if (!this->pixels)
         return;
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glViewport((this->width()-width)/2, (this->height()-height)/2, width, height);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->currentWidth, this->currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, this->pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
