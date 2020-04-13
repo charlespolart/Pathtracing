@@ -93,6 +93,7 @@ void ObjectsWindow::materials_comboBox_editingFinished()
         return;
     }
     this->currentObj->material->name = this->ui->materials_comboBox->currentText().toStdString();
+    this->ui->materials_comboBox->setItemText(this->ui->materials_comboBox->currentIndex(), this->ui->materials_comboBox->currentText());
 }
 
 void ObjectsWindow::on_newMaterial_pushButton_clicked()
@@ -130,5 +131,6 @@ void ObjectsWindow::on_emission_doubleSpinBox_valueChanged(double value)
 void ObjectsWindow::on_deleteMaterial_pushButton_clicked()
 {
     this->ui->materials_comboBox->setCurrentIndex(-1);
+    this->on_materials_comboBox_currentIndexChanged("");
     this->currentObj->material = &this->scene->mesh.defaultMaterial;
 }
