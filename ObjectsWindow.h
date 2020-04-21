@@ -3,6 +3,7 @@
 
 #include <QScrollBar>
 #include <QLineEdit>
+#include <QColorDialog>
 #include <iostream>
 #include "Scene.h"
 
@@ -19,10 +20,12 @@ public:
     ~ObjectsWindow();
 
 public:
+    void updateMaterialList();
     void displayObjectsList();
 
 private:
     std::string uniqueMaterialName(const std::string &name, int nb = 0);
+    void updateMaterial();
 
 private slots:
     void on_objects_listWidget_currentTextChanged(const QString &currentText);
@@ -30,6 +33,7 @@ private slots:
     void materials_comboBox_editingFinished();
     void on_newMaterial_pushButton_clicked();
     void on_deleteMaterial_pushButton_clicked();
+    void on_color_pushButton_clicked();
     void on_emission_doubleSpinBox_valueChanged(double value);
 
 private:

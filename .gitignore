@@ -1,1 +1,10 @@
+release
+debug
+*.Release
+*.Debug
+*.ui
+*.user
+Makefile
+*appdatalocaltemp*
+*.json
 3D files

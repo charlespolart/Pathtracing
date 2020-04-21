@@ -20,6 +20,8 @@ void Scene::freeMesh()
 {
     for (size_t i = 0; i < this->mesh.objs.size(); ++i)
         delete this->mesh.objs[i];
+    for (size_t i = 0; i < this->mesh.materials.size(); ++i)
+        delete this->mesh.materials[i];
     this->mesh = mesh_t{};
 }
 

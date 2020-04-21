@@ -16,7 +16,7 @@ public:
     explicit SettingsWindow(Scene *scene, QWidget *parent = nullptr);
     ~SettingsWindow();
 
-private:
+public:
     Q_INVOKABLE void updateValues();
 
 private slots:

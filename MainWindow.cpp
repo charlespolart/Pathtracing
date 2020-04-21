@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->ui->objects_gridWidget->layout()->addWidget(this->objectsWindow);
     this->ui->openGL_GLWidget->setSettingsWindow(this->settingsWindow);
     this->ui->openGL_GLWidget->setScene(this->scene);
-    this->ui->openGL_GLWidget->setDisabled(true);
+    this->ui->openGL_GLWidget->pauseRendering(true);
     this->ui->pathtracing_GLWidget->setScene(this->scene);
 }
 
@@ -52,7 +52,7 @@ void MainWindow::disableOptions(bool status)
     this->ui->stop_pushButton->setEnabled(status);
     this->settingsWindow->setDisabled(status);
     this->objectsWindow->setDisabled(status);
-    this->ui->openGL_GLWidget->setDisabled(status);
+    this->ui->openGL_GLWidget->pauseRendering(status);
 }
 
 void MainWindow::writeTerminal(const QString &str, bool replace)
@@ -65,18 +65,16 @@ void MainWindow::writeTerminal(const QString &str, bool replace)
         this->ui->terminal_listWidget->scrollToItem(this->ui->terminal_listWidget->item(this->ui->terminal_listWidget->count()-1));
 }
 
-void MainWindow::on_actionImport_obj_triggered()
+bool MainWindow::loadFile(QString path)
 {
-    QString path = QFileDialog::getOpenFileName(this,
-                                                tr("Open file"), "",
-                                                tr("OBJ file (*.obj);;All Files (*)"));
+    Benchmark benchmark;
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    Benchmark benchmark;
 
     if (fileName.isEmpty())
-        return;
+        return (false);
 
+    this->objPath = path;
     this->writeTerminal("Loading "+fileName+" -> ...");
     qApp->processEvents();
     benchmark.start();
@@ -89,16 +87,161 @@ void MainWindow::on_actionImport_obj_triggered()
     this->scene->buidTree();
     this->writeTerminal("Building collision tree -> "+QString::fromStdString(benchmark.getBenchTime().fullTime_str), true);
 
-    if (this->scene->mesh.collisionTree)
+    if (!this->scene->mesh.collisionTree)
     {
-        this->writeTerminal("Success");
-        this->ui->render_pushButton->setEnabled(true);
-        this->objectsWindow->displayObjectsList();
-        this->ui->openGL_GLWidget->setEnabled(true);
-        this->ui->openGL_GLWidget->init();
-    }
-    else
         this->writeTerminal("Failed");
+        return (false);
+    }
+    this->writeTerminal("Success");
+    this->ui->render_pushButton->setEnabled(true);
+    this->objectsWindow->displayObjectsList();
+    this->ui->openGL_GLWidget->pauseRendering(false);
+    this->ui->openGL_GLWidget->init();
+    return (true);
+}
+
+void MainWindow::on_actionImport_obj_triggered()
+{
+    QString path = QFileDialog::getOpenFileName(this,
+                                                tr("Open file"), "",
+                                                tr("OBJ file (*.obj);;All Files (*)"));
+
+    if (path.isNull())
+        return;
+    this->loadFile(path);
+}
+
+void MainWindow::on_actionSave_scene_triggered()
+{
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save scene"), "",
+                                                    tr("JSON file (*.json);;All Files (*)"));
+
+    if (fileName.isNull())
+        return;
+
+    /* Create JSON */
+    QJsonObject jsonObject;
+    QJsonDocument jsonDocument;
+
+    jsonObject["obj"] = this->objPath;
+
+    jsonObject["camera"] = QJsonObject({{"resolution", QJsonObject({{"width", this->scene->camera->width},
+                                                                    {"height", this->scene->camera->height}})},
+                                        {"position", QJsonObject({{"x", this->scene->camera->position.x},
+                                                                  {"y", this->scene->camera->position.y},
+                                                                  {"z", this->scene->camera->position.z}})},
+                                        {"rotation", QJsonObject({{"x", this->scene->camera->rotation.x},
+                                                                  {"y", this->scene->camera->rotation.y},
+                                                                  {"z", this->scene->camera->rotation.z}})}});
+
+    jsonObject["pathtracing"] = QJsonObject({{"pixel", QJsonObject({{"samples", this->scene->samples},
+                                                                    {"depth", this->scene->maxDepth}})}});
+
+    {
+        QJsonArray jsonArray;
+
+        for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
+        {
+            jsonArray.push_back(QJsonObject({{"name", QString::fromStdString(this->scene->mesh.materials[i]->name)},
+                                             {"color", QJsonObject({{"r", this->scene->mesh.materials[i]->color.x},
+                                                                    {"g", this->scene->mesh.materials[i]->color.y},
+                                                                    {"b", this->scene->mesh.materials[i]->color.z}})},
+                                             {"emission", this->scene->mesh.materials[i]->emission}}));
+        }
+        jsonObject["materials"] = jsonArray;
+    }
+
+    {
+        QJsonArray jsonArray;
+
+        for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
+        {
+            jsonArray.push_back(QJsonObject({{"name", QString::fromStdString(this->scene->mesh.objs[i]->name)},
+                                             {"material", QString::fromStdString(this->scene->mesh.objs[i]->material->name)}}));
+        }
+        jsonObject["objects"] = jsonArray;
+    }
+
+    jsonDocument.setObject(jsonObject);
+
+    /* Save JSON */
+    std::ofstream file;
+
+    file.open(fileName.toStdString());
+    file << jsonDocument.toJson().toStdString();
+    file.close();
+}
+
+void MainWindow::on_actionLoad_scene_triggered()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Load scene"), "",
+                                                    tr("JSON file (*.json);;All Files (*)"));
+    if (fileName.isNull())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly))
+        return;
+
+    QByteArray saveData = file.readAll();
+    QJsonDocument document = QJsonDocument::fromJson(saveData);
+
+    /* Read JSON */
+    if (!this->loadFile(document["obj"].toString()))
+        return;
+
+    this->scene->camera->width = document["camera"]["resolution"]["width"].toInt();
+    this->scene->camera->height = document["camera"]["resolution"]["height"].toInt();
+    this->scene->camera->position.x = document["camera"]["position"]["x"].toDouble();
+    this->scene->camera->position.y = document["camera"]["position"]["y"].toDouble();
+    this->scene->camera->position.z = document["camera"]["position"]["z"].toDouble();
+    this->scene->camera->rotation.x = document["camera"]["rotation"]["x"].toDouble();
+    this->scene->camera->rotation.y = document["camera"]["rotation"]["y"].toDouble();
+    this->scene->camera->rotation.z = document["camera"]["rotation"]["z"].toDouble();
+    this->scene->samples = document["pathtracing"]["pixel"]["samples"].toInt();
+    this->scene->maxDepth = document["pathtracing"]["pixel"]["depth"].toInt();
+    this->settingsWindow->updateValues();
+
+    {
+        QJsonArray jsonArray = document["materials"].toArray();
+
+        for (const QJsonValue &jsonValue : jsonArray)
+        {
+            this->scene->mesh.materials.emplace_back(
+                        new Material(jsonValue.toObject()["name"].toString().toStdString(),
+                        Vector3d(jsonValue.toObject()["color"].toObject()["r"].toDouble(),
+                    jsonValue.toObject()["color"].toObject()["g"].toDouble(),
+                    jsonValue.toObject()["color"].toObject()["b"].toDouble()),
+                    jsonValue.toObject()["emission"].toDouble()));
+        }
+        this->objectsWindow->updateMaterialList();
+    }
+
+    {
+        QJsonArray jsonArray = document["objects"].toArray();
+
+        for (const QJsonValue &jsonValue : jsonArray)
+        {
+            if (!jsonValue.toObject()["material"].toString().isEmpty())
+            {
+                for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
+                {
+                    if (jsonValue.toObject()["name"].toString().toStdString() == this->scene->mesh.objs[i]->name)
+                    {
+                        for (size_t t = 0; t < this->scene->mesh.materials.size(); ++t)
+                        {
+                            if (jsonValue.toObject()["material"].toString().toStdString() == this->scene->mesh.materials[t]->name)
+                            {
+                                this->scene->mesh.objs[i]->material = this->scene->mesh.materials[t];
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void MainWindow::on_render_pushButton_clicked()

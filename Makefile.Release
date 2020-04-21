@@ -672,6 +672,7 @@ release/moc_GLWidgetOpenGL.cpp: GLWidgetOpenGL.h \
 		ObjectsWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QScrollBar \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
 		Engine.h \
 		Pathtracing.h \
 		CastRay.h \
@@ -1304,6 +1305,8 @@ release/moc_MainWindow.cpp: MainWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextformat.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qpen.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		Engine.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGL \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGLDepends \
@@ -1551,7 +1554,6 @@ release/moc_MainWindow.cpp: MainWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qbuttongroup.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcalendarwidget.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcheckbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolormap.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolumnview.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcombobox.h \
@@ -1780,6 +1782,9 @@ release/moc_ObjectsWindow.cpp: ObjectsWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextformat.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qpen.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qdialog.h \
 		Scene.h \
 		Camera.h \
 		Vector.h \
@@ -2900,6 +2905,7 @@ ui_mainwindow.h: mainwindow.ui \
 		ObjectsWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QScrollBar \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
 		Engine.h \
 		Pathtracing.h \
 		CastRay.h
@@ -4031,6 +4037,7 @@ release/GLWidgetOpenGL.o: GLWidgetOpenGL.cpp GLWidgetOpenGL.h \
 		ObjectsWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QScrollBar \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
 		Engine.h \
 		Pathtracing.h \
 		CastRay.h
@@ -4710,6 +4717,9 @@ release/ObjectsWindow.o: ObjectsWindow.cpp ObjectsWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextformat.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qpen.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qdialog.h \
 		Scene.h \
 		Camera.h \
 		Vector.h \
@@ -5073,6 +5083,8 @@ release/main.o: main.cpp ../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QApp
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextformat.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qpen.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		Engine.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGL \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGLDepends \
@@ -5314,7 +5326,6 @@ release/main.o: main.cpp ../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QApp
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qbuttongroup.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcalendarwidget.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcheckbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolormap.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolumnview.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcombobox.h \
@@ -5563,6 +5574,8 @@ release/MainWindow.o: MainWindow.cpp MainWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextformat.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qpen.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtGui/qtextoption.h \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/QColorDialog \
+		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		Engine.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGL \
 		../../../../Qt/5.12.1/mingw73_64/include/QtOpenGL/QtOpenGLDepends \
@@ -5810,7 +5823,6 @@ release/MainWindow.o: MainWindow.cpp MainWindow.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qbuttongroup.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcalendarwidget.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcheckbox.h \
-		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolordialog.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolormap.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcolumnview.h \
 		../../../../Qt/5.12.1/mingw73_64/include/QtWidgets/qcombobox.h \

@@ -32,6 +32,7 @@ public:
 
 public:
     void init();
+    void pauseRendering(bool status);
 
 protected:
     void initializeGL();
@@ -51,6 +52,7 @@ private:
     SettingsWindow *settingsWindow;
     Scene *scene;
     QTimer update_timer;
+    bool rendering;
 
     QTime frame_time;
     double deltaTime;

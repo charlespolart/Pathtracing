@@ -9,7 +9,7 @@
 class Material
 {
 public:
-    Material();
+    Material(const std::string &name = "", const Vector3d &color = Vector3d(1.0, 1.0, 1.0), double emission = 0.0);
 
 public:
     std::string name;

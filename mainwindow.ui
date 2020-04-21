@@ -239,6 +239,9 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionLoad_scene"/>
+    <addaction name="actionSave_scene"/>
+    <addaction name="separator"/>
     <addaction name="actionImport_obj"/>
    </widget>
    <addaction name="menuWindows"/>
@@ -246,6 +249,16 @@
   <action name="actionImport_obj">
    <property name="text">
     <string>Import .obj</string>
+   </property>
+  </action>
+  <action name="actionSave_scene">
+   <property name="text">
+    <string>Save scene</string>
+   </property>
+  </action>
+  <action name="actionLoad_scene">
+   <property name="text">
+    <string>Load scene</string>
    </property>
   </action>
  </widget>

@@ -3,6 +3,7 @@
 GLWidgetOpenGL::GLWidgetOpenGL(QWidget *parent) :
     QOpenGLWidget(parent),
     scene(nullptr),
+    rendering(true),
     deltaTime(0.0),
     lastMouseX(0),
     lastMouseY(0),
@@ -94,6 +95,12 @@ void GLWidgetOpenGL::setSettingsWindow(SettingsWindow *settingsWindow)
 void GLWidgetOpenGL::setScene(Scene *scene)
 {
     this->scene = scene;
+}
+
+void GLWidgetOpenGL::pauseRendering(bool status)
+{
+    this->rendering = !status;
+    this->setDisabled(status);
 }
 
 void GLWidgetOpenGL::init()
@@ -205,5 +212,6 @@ void GLWidgetOpenGL::paintGL()
 
 void GLWidgetOpenGL::update_timeout()
 {
-    this->update();
+    if (this->rendering)
+        this->update();
 }

@@ -12,13 +12,20 @@ ObjectsWindow::ObjectsWindow(Scene *scene, QWidget *parent) :
     this->ui->materials_comboBox->view()->setMinimumWidth(200);
     this->ui->materials_comboBox->view()->setMinimumHeight(200);
     this->ui->surface_groupBox->setVisible(false);
-    //this->ui->materials_comboBox->setLineEdit(new QLineEdit);
     connect(this->ui->materials_comboBox->lineEdit(), SIGNAL(editingFinished()), SLOT(materials_comboBox_editingFinished()));
 }
 
 ObjectsWindow::~ObjectsWindow()
 {
     delete ui;
+}
+
+void ObjectsWindow::updateMaterialList()
+{
+    this->currentObj = nullptr;
+    this->ui->materials_comboBox->clear();
+    for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
+        this->ui->materials_comboBox->addItem(QString::fromStdString(this->scene->mesh.materials[i]->name));
 }
 
 void ObjectsWindow::displayObjectsList()
@@ -33,6 +40,38 @@ void ObjectsWindow::displayObjectsList()
 
     this->ui->scrollAreaWidgetContents->setVisible(false);
     this->ui->scrollArea->verticalScrollBar()->hide();
+}
+
+void ObjectsWindow::updateMaterial()
+{
+    if (!this->currentObj)
+        return;
+
+    if (this->currentObj->material->name.empty())
+    {
+        this->ui->surface_groupBox->setVisible(false);
+        this->ui->materials_comboBox->lineEdit()->setVisible(false);
+        this->ui->materials_comboBox->setCurrentIndex(-1);
+    }
+    else
+    {
+        this->ui->surface_groupBox->setVisible(true);
+        this->ui->materials_comboBox->lineEdit()->setVisible(true);
+        for (int i = 0; i < this->ui->materials_comboBox->count(); ++i)
+        {
+            if (this->ui->materials_comboBox->itemText(i).toStdString() == this->currentObj->material->name)
+            {
+                this->ui->materials_comboBox->setCurrentIndex(i);
+                break;
+            }
+        }
+    }
+
+    this->ui->color_pushButton->setStyleSheet("background-color: rgb("+
+                                              QString::number(this->currentObj->material->color.x*255.0)+","+
+                                              QString::number(this->currentObj->material->color.y*255.0)+","+
+                                              QString::number(this->currentObj->material->color.z*255.0)+")");
+    this->ui->emission_doubleSpinBox->setValue(this->currentObj->material->emission);
 }
 
 std::string ObjectsWindow::uniqueMaterialName(const std::string &name, int nb)
@@ -57,21 +96,16 @@ void ObjectsWindow::on_objects_listWidget_currentTextChanged(const QString &curr
             break;
         }
     }
-    this->ui->materials_comboBox->setCurrentIndex(-1);
-    this->ui->materials_comboBox->setCurrentText(QString::fromStdString(this->currentObj->material->name));
-    this->on_materials_comboBox_currentIndexChanged(QString::fromStdString(this->currentObj->material->name));
     this->ui->scrollAreaWidgetContents->setVisible(true);
     this->ui->scrollArea->verticalScrollBar()->show();
+    this->updateMaterial();
 }
 
 void ObjectsWindow::on_materials_comboBox_currentIndexChanged(const QString &currentText)
 {
-    if (currentText == "")
-    {
-        this->ui->surface_groupBox->setVisible(false);
-        this->ui->materials_comboBox->lineEdit()->setVisible(false);
+    if (!this->currentObj)
         return;
-    }
+
     for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
     {
         if (this->scene->mesh.materials[i]->name == currentText.toStdString())
@@ -80,13 +114,14 @@ void ObjectsWindow::on_materials_comboBox_currentIndexChanged(const QString &cur
             break;
         }
     }
-    this->ui->emission_doubleSpinBox->setValue(this->currentObj->material->emission);
-    this->ui->surface_groupBox->setVisible(true);
-    this->ui->materials_comboBox->lineEdit()->setVisible(true);
+    this->updateMaterial();
 }
 
 void ObjectsWindow::materials_comboBox_editingFinished()
 {
+    if (!this->currentObj)
+        return;
+
     if (this->ui->materials_comboBox->currentText() == "")
     {
         this->ui->materials_comboBox->setCurrentText(QString::fromStdString(this->currentObj->material->name));
@@ -98,20 +133,31 @@ void ObjectsWindow::materials_comboBox_editingFinished()
 
 void ObjectsWindow::on_newMaterial_pushButton_clicked()
 {
+    if (!this->currentObj)
+        return;
+
     Material *material = new Material();
 
     material->name = this->uniqueMaterialName("Material");
     this->scene->mesh.materials.push_back(material);
     this->ui->materials_comboBox->addItem(QString::fromStdString(material->name));
-    for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
-    {
-        if (this->scene->mesh.objs[i]->name == this->ui->objects_listWidget->currentItem()->text().toStdString())
-        {
-            this->scene->mesh.objs[i]->material = material;
-            break;
-        }
-    }
-    this->ui->materials_comboBox->setCurrentText(QString::fromStdString(material->name));
+    this->currentObj->material = material;
+    this->updateMaterial();
+}
+
+void ObjectsWindow::on_color_pushButton_clicked()
+{
+    if (!this->currentObj)
+        return;
+
+    QColor color = QColorDialog::getColor(QColor(static_cast<int>(this->currentObj->material->color.x*255.0),
+                                                 static_cast<int>(this->currentObj->material->color.y*255.0),
+                                                 static_cast<int>(this->currentObj->material->color.z*255.0)));
+
+    if (!color.isValid())
+        return;
+    this->currentObj->material->color = Vector3d(color.red()/255.0, color.green()/255.0, color.blue()/255.0);
+    this->updateMaterial();
 }
 
 void ObjectsWindow::on_emission_doubleSpinBox_valueChanged(double value)
@@ -130,7 +176,9 @@ void ObjectsWindow::on_emission_doubleSpinBox_valueChanged(double value)
 
 void ObjectsWindow::on_deleteMaterial_pushButton_clicked()
 {
+    if (!this->currentObj)
+        return;
     this->ui->materials_comboBox->setCurrentIndex(-1);
-    this->on_materials_comboBox_currentIndexChanged("");
     this->currentObj->material = &this->scene->mesh.defaultMaterial;
+    this->updateMaterial();
 }

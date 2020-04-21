@@ -25,9 +25,12 @@ private:
     void resizeWindows();
     void disableOptions(bool status);
     Q_INVOKABLE void writeTerminal(const QString &str, bool replace = false);
+    bool loadFile(QString path);
 
 private slots:
     void on_actionImport_obj_triggered();
+    void on_actionSave_scene_triggered();
+    void on_actionLoad_scene_triggered();
     void on_render_pushButton_clicked();
     Q_INVOKABLE void on_stop_pushButton_clicked();
 
@@ -37,6 +40,7 @@ private:
 
     Engine *engine;
     Scene *scene;
+    QString objPath;
     Ui::MainWindow *ui;
 };
 
