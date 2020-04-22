@@ -27,6 +27,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        BSDF.cpp \
         Benchmark.cpp \
         Camera.cpp \
         CastRay.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
         MainWindow.cpp
 
 HEADERS += \
+        BSDF.h \
         Benchmark.h \
         Camera.h \
         CastRay.h \

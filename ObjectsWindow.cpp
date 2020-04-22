@@ -30,6 +30,8 @@ void ObjectsWindow::updateMaterialList()
 
 void ObjectsWindow::displayObjectsList()
 {
+    this->currentObj = nullptr;
+
     this->ui->objects_listWidget->clear();
     for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
         this->ui->objects_listWidget->addItem(QString::fromStdString(this->scene->mesh.objs[i]->name));

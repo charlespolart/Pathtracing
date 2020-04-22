@@ -83,8 +83,7 @@ void Engine::drawPathtracing(int *current, int *sample)
         for (int x = 0; x < this->scene->camera->width; ++x)
         {
             double xRand = static_cast<double>(std::rand()) / RAND_MAX, yRand = static_cast<double>(std::rand()) / RAND_MAX;
-            //Vector3d color = Pathtracing::render(this->scene->camera->initRay(x + xRand, y + yRand), this->scene, Vector2i(x, y));
-            Vector3d color = Pathtracing::render(this->scene->camera->initRay(x + xRand, y + yRand), this->scene, 0);
+            Vector3d color = Pathtracing::render(this->scene->camera->initRay(x + xRand, y + yRand), this->scene);
             if (color != 0)
                 this->pixelsData[x+y*this->scene->camera->width].color += color;
             this->putPixel(x, y, this->pixelsData[x+y*this->scene->camera->width].color / this->pixelsData[x+y*this->scene->camera->width].samples);
