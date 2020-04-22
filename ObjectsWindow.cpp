@@ -88,11 +88,13 @@ std::string ObjectsWindow::uniqueMaterialName(const std::string &name, int nb)
     return (i >= this->scene->mesh.materials.size() ? name + (nb == 0 ? "" : "_" + std::to_string(nb)) : this->uniqueMaterialName(name, nb+1));
 }
 
-void ObjectsWindow::on_objects_listWidget_currentTextChanged(const QString &currentText)
+void ObjectsWindow::on_objects_listWidget_itemSelectionChanged()
 {
+    if (this->ui->objects_listWidget->selectedItems().empty())
+        return;
     for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
     {
-        if (this->scene->mesh.objs[i]->name == currentText.toStdString())
+        if (this->scene->mesh.objs[i]->name == this->ui->objects_listWidget->currentItem()->text().toStdString())
         {
             this->currentObj = this->scene->mesh.objs[i];
             break;
