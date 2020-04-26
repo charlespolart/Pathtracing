@@ -2,7 +2,7 @@ release
 debug
 *.Release
 *.Debug
-*.ui
+ui_*
 *.user
 Makefile
 *appdatalocaltemp*
