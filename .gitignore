@@ -1,3 +1,4 @@
+.qmake.stash
 release
 debug
 *.Release
