@@ -25,7 +25,7 @@ public:
 
 private:
     std::string uniqueMaterialName(const std::string &name, int nb = 0);
-    void updateMaterial();
+    void updateSurface();
 
 private slots:
     void on_objects_listWidget_itemSelectionChanged();
@@ -33,6 +33,7 @@ private slots:
     void materials_comboBox_editingFinished();
     void on_newMaterial_pushButton_clicked();
     void on_deleteMaterial_pushButton_clicked();
+    void on_surface_comboBox_currentIndexChanged(const QString &currentText);
     void on_color_pushButton_clicked();
     void on_emission_doubleSpinBox_valueChanged(double value);
 
@@ -41,6 +42,7 @@ private:
 
     Scene *scene;
     Obj3d *currentObj;
+    bool setSurfaceDefault;
 };
 
 #endif // OBJECTSWINDOW_H

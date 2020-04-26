@@ -1,8 +1,11 @@
 #include "Material.h"
 
-Material::Material(const std::string &name, const Vector3d &color, double emission)
+Material::Material() :
+    name(""),
+    surface(DIFFUSE),
+    color(1.0, 1.0, 1.0),
+    emission(0.0),
+    roughness(0.0),
+    ior(0.0)
 {
-    this->name = name;
-    this->color = color;
-    this->emission = emission;
 }

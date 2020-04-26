@@ -142,7 +142,14 @@ void MainWindow::on_actionSave_scene_triggered()
 
         for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
         {
+            QString surface;
+
+            if (this->scene->mesh.materials[i]->surface == DIFFUSE) surface = "DIFFUSE";
+            else if (this->scene->mesh.materials[i]->surface == REFLECTION) surface = "REFLECTION";
+            else if (this->scene->mesh.materials[i]->surface == TRANSMISSION) surface = "TRANSMISSION";
+            else if (this->scene->mesh.materials[i]->surface == EMISSION) surface = "EMISSION";
             jsonArray.push_back(QJsonObject({{"name", QString::fromStdString(this->scene->mesh.materials[i]->name)},
+                                             {"surface", surface},
                                              {"color", QJsonObject({{"r", this->scene->mesh.materials[i]->color.x},
                                                                     {"g", this->scene->mesh.materials[i]->color.y},
                                                                     {"b", this->scene->mesh.materials[i]->color.z}})},
@@ -207,12 +214,19 @@ void MainWindow::on_actionLoad_scene_triggered()
 
         for (const QJsonValue &jsonValue : jsonArray)
         {
-            this->scene->mesh.materials.emplace_back(
-                        new Material(jsonValue.toObject()["name"].toString().toStdString(),
-                        Vector3d(jsonValue.toObject()["color"].toObject()["r"].toDouble(),
+            Material *material = new Material();
+            QString surface = jsonValue.toObject()["surface"].toString();
+
+            if (surface == "DIFFUSE") material->surface = DIFFUSE;
+            else if (surface == "REFLECTION") material->surface = REFLECTION;
+            else if (surface == "TRANSMISSION") material->surface = TRANSMISSION;
+            else if (surface == "EMISSION") material->surface = EMISSION;
+            material->name = jsonValue.toObject()["name"].toString().toStdString();
+            material->color = Vector3d(jsonValue.toObject()["color"].toObject()["r"].toDouble(),
                     jsonValue.toObject()["color"].toObject()["g"].toDouble(),
-                    jsonValue.toObject()["color"].toObject()["b"].toDouble()),
-                    jsonValue.toObject()["emission"].toDouble()));
+                    jsonValue.toObject()["color"].toObject()["b"].toDouble());
+            material->emission = jsonValue.toObject()["emission"].toDouble();
+            this->scene->mesh.materials.push_back(material);
         }
         this->objectsWindow->updateMaterialList();
     }

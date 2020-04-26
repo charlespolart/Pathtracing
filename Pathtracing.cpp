@@ -36,7 +36,7 @@ Vector3d Pathtracing::render(const Ray &ray, Scene *scene, int depth)
 
     if (CastRay::castRay(ray, scene->mesh.collisionTree, collisionData) && depth <= scene->maxDepth)
     {
-        if (collisionData.material->emission > 0.0)
+        if (collisionData.material->surface == EMISSION)
             return (collisionData.material->color * collisionData.material->emission);
         randDir = Pathtracing::random_direction(collisionData.normal);
         radiance = collisionData.material->color*randDir.dotProduct(collisionData.normal);
