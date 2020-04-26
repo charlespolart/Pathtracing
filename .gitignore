@@ -7,5 +7,4 @@ ui_*
 *.user
 Makefile
 *appdatalocaltemp*
-*.json
 3D files
