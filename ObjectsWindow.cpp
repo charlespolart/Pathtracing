@@ -238,3 +238,13 @@ void ObjectsWindow::on_emission_doubleSpinBox_valueChanged(double value)
         }
     }
 }
+
+void ObjectsWindow::on_roughness_doubleSpinBox_valueChanged(double value)
+{
+    this->currentObj->material->roughness = value;
+}
+
+void ObjectsWindow::on_ior_doubleSpinBox_valueChanged(double value)
+{
+    this->currentObj->material->ior = value;
+}

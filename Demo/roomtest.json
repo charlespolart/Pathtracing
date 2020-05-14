@@ -18,13 +18,13 @@
     "materials": [
         {
             "color": {
-                "b": 1,
-                "g": 0.6666666666666666,
-                "r": 1
+                "b": 0.8627450980392157,
+                "g": 0.8627450980392157,
+                "r": 0.8627450980392157
             },
             "emission": 0,
             "name": "Sphere pink",
-            "surface": "DIFFUSE"
+            "surface": "REFLECTION"
         },
         {
             "color": {
@@ -57,7 +57,7 @@
             "surface": "DIFFUSE"
         }
     ],
-    "obj": "C:/Users/Charles Polart/Documents/Pathtracing/3D files/roomtest.obj",
+    "obj": "C:/Users/Charles Polart/Documents/Pathtracing/Demo/roomtest.obj",
     "objects": [
         {
             "material": "",

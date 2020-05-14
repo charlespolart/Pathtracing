@@ -78,7 +78,11 @@ bool MainWindow::loadFile(QString path)
     this->writeTerminal("Loading "+fileName+" -> ...");
     qApp->processEvents();
     benchmark.start();
-    this->scene->loadFile(path.toStdString());
+    if (!this->scene->loadFile(path.toStdString()))
+    {
+        this->writeTerminal("Failed to open");
+        return (false);
+    }
     this->writeTerminal("Loading "+fileName+" -> "+QString::fromStdString(benchmark.getBenchTime().fullTime_str), true);
 
     this->writeTerminal("Building collision tree -> ...");

@@ -25,10 +25,10 @@ void Scene::freeMesh()
     this->mesh = mesh_t{};
 }
 
-void Scene::loadFile(const std::string &path)
+bool Scene::loadFile(const std::string &path)
 {
     this->freeMesh();
-    FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices, &this->mesh.defaultMaterial);
+    return (FileImport::loadObj(path, this->mesh.objs, this->mesh.vertices, &this->mesh.defaultMaterial));
 }
 
 void Scene::buidTree()

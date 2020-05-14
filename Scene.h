@@ -25,7 +25,7 @@ public:
     ~Scene();
 
 public:
-    void loadFile(const std::string &path);
+    bool loadFile(const std::string &path);
     void buidTree();
 
 private:

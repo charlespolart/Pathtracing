@@ -153,7 +153,7 @@ bool CastRay::castRay(const Ray &ray, const treeNode_t *node, collisionData_t &c
         return (false);
     collisionData.position = ray.origin + ray.direction*collisionData.t;
     collisionData.normal = CastRay::normalInterpolation(collisionData);
-    if (ray.direction.dotProduct(collisionData.normal) >= 0.0)
-        collisionData.normal *= -1.0;
+    //if (ray.direction.dotProduct(collisionData.normal) >= 0.0)
+        //collisionData.normal *= -1.0;
     return (true);
 }

@@ -17,13 +17,15 @@ long FileImport::getLineFromStr(char *src, char *dest, long destSize)
     return (i);
 }
 
-void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices, Material *defaultMaterial)
+bool FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, vertices_t &vertices, Material *defaultMaterial)
 {
     FILE *fd = std::fopen(path.c_str(), "r");
     char *file;
     char line[128];
     long size = 0;
 
+    if (!fd)
+        return (false);
     fseek(fd, 0L, SEEK_END);
     size = ftell(fd);
     fseek(fd, 0L, SEEK_SET);
@@ -75,4 +77,5 @@ void FileImport::loadObj(const std::string &path, std::vector<Obj3d *> &obj3ds, 
     }
     delete [] file;
     std::fclose(fd);
+    return (true);
 }

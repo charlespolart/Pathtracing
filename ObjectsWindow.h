@@ -36,6 +36,8 @@ private slots:
     void on_surface_comboBox_currentIndexChanged(const QString &currentText);
     void on_color_pushButton_clicked();
     void on_emission_doubleSpinBox_valueChanged(double value);
+    void on_roughness_doubleSpinBox_valueChanged(double value);
+    void on_ior_doubleSpinBox_valueChanged(double value);
 
 private:
     Ui::ObjectsWindow *ui;
