@@ -91,7 +91,8 @@ void ObjectsWindow::on_objects_listWidget_itemSelectionChanged()
     }
     this->ui->scrollAreaWidgetContents->setVisible(true);
     this->ui->scrollArea->verticalScrollBar()->show();
-    this->ui->materials_comboBox->setCurrentIndex(this->ui->materials_comboBox->findText(QString::fromStdString(this->currentObj->material->name)));
+	if (this->currentObj)
+		this->ui->materials_comboBox->setCurrentIndex(this->ui->materials_comboBox->findText(QString::fromStdString(this->currentObj->material->name)));
 }
 
 void ObjectsWindow::on_materials_comboBox_currentIndexChanged(const QString &currentText)
