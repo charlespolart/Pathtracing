@@ -1,250 +1,158 @@
-#include "ObjectsWindow.h"
 #include "ui_objectswindow.h"
+#include "ObjectsWindow.h"
 
 ObjectsWindow::ObjectsWindow(Scene *scene, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::ObjectsWindow),
-    scene(scene),
-    currentObj(nullptr),
-    setSurfaceDefault(false)
+    _ui(new Ui::ObjectsWindow),
+    _scene(scene),
+    _currentObj(nullptr),
+    _setSurfaceDefault(true)
 {
-    this->ui->setupUi(this);
-    this->displayObjectsList();
-    this->ui->materials_comboBox->view()->setMinimumWidth(200);
-    this->ui->materials_comboBox->view()->setMinimumHeight(200);
-    this->ui->surface_groupBox->setVisible(false);
-    this->ui->emission_widget->setVisible(false);
-    this->ui->roughness_widget->setVisible(false);
-    this->ui->ior_widget->setVisible(false);
-    connect(this->ui->materials_comboBox->lineEdit(), SIGNAL(editingFinished()), SLOT(materials_comboBox_editingFinished()));
+    this->_ui->setupUi(this);
+    this->hideUI();
 }
 
 ObjectsWindow::~ObjectsWindow()
 {
-    delete ui;
+    delete this->_ui;
 }
 
-void ObjectsWindow::updateMaterialList()
+void ObjectsWindow::hideUI()
 {
-    this->currentObj = nullptr;
-    this->ui->materials_comboBox->clear();
-    for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
-        this->ui->materials_comboBox->addItem(QString::fromStdString(this->scene->mesh.materials[i]->name));
-    this->ui->materials_comboBox->setCurrentIndex(-1);
+    this->_ui->surface_groupBox->setVisible(false);
+    this->_ui->roughness_label->setVisible(false);
+    this->_ui->roughness_doubleSpinBox->setVisible(false);
+    this->_ui->ior_label->setVisible(false);
+    this->_ui->ior_doubleSpinBox->setVisible(false);
+    this->_ui->scrollAreaWidgetContents->setVisible(false);
+    this->_ui->scrollArea->verticalScrollBar()->hide();
 }
 
 void ObjectsWindow::displayObjectsList()
 {
-    this->currentObj = nullptr;
+    this->_currentObj = nullptr;
 
-    this->ui->objects_listWidget->clear();
-    for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
-        this->ui->objects_listWidget->addItem(QString::fromStdString(this->scene->mesh.objs[i]->name));
-
-    this->ui->materials_comboBox->clear();
-    for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
-        this->ui->materials_comboBox->addItem(QString::fromStdString(this->scene->mesh.materials[i]->name));
-
-    this->ui->scrollAreaWidgetContents->setVisible(false);
-    this->ui->scrollArea->verticalScrollBar()->hide();
+    this->_ui->objects_listWidget->clear();
+    this->hideUI();
+    for (size_t i = 0; i < this->_scene->_mesh.objs.size(); ++i)
+        this->_ui->objects_listWidget->addItem(QString::fromStdString(this->_scene->_mesh.objs[i]->_name));
 }
 
 void ObjectsWindow::updateSurface()
 {
-    if (!this->currentObj)
-        return;
-
-    this->setSurfaceDefault = false;
-    if (currentObj->material->surface == DIFFUSE)
-        this->ui->surface_comboBox->setCurrentIndex(this->ui->surface_comboBox->findText("Diffuse"));
-    else if (currentObj->material->surface == REFLECTION)
-        this->ui->surface_comboBox->setCurrentIndex(this->ui->surface_comboBox->findText("Reflection"));
-    else if (currentObj->material->surface == TRANSMISSION)
-        this->ui->surface_comboBox->setCurrentIndex(this->ui->surface_comboBox->findText("Transmission"));
-    else if (currentObj->material->surface == EMISSION)
-        this->ui->surface_comboBox->setCurrentIndex(this->ui->surface_comboBox->findText("Emission"));
-    this->on_surface_comboBox_currentIndexChanged(this->ui->surface_comboBox->currentText());
-    this->setSurfaceDefault = true;
-}
-
-std::string ObjectsWindow::uniqueMaterialName(const std::string &name, int nb)
-{
-    size_t i = 0;
-
-    for (; i < this->scene->mesh.materials.size(); ++i)
+    this->_ui->roughness_label->setVisible(false);
+    this->_ui->roughness_doubleSpinBox->setVisible(false);
+    this->_ui->ior_label->setVisible(false);
+    this->_ui->ior_doubleSpinBox->setVisible(false);
+    if (_currentMaterial->_surface == DIFFUSE)
     {
-        if (name + (nb == 0 ? "" : "_" + std::to_string(nb)) == this->scene->mesh.materials[i]->name)
-            break;
+        this->_ui->surface_comboBox->setCurrentIndex(this->_ui->surface_comboBox->findText("Diffuse"));
     }
-    return (i >= this->scene->mesh.materials.size() ? name + (nb == 0 ? "" : "_" + std::to_string(nb)) : this->uniqueMaterialName(name, nb+1));
+    else if (this->_currentMaterial->_surface == REFLECTION)
+    {
+        this->_ui->surface_comboBox->setCurrentIndex(this->_ui->surface_comboBox->findText("Reflection"));
+        this->_ui->roughness_label->setVisible(true);
+        this->_ui->roughness_doubleSpinBox->setVisible(true);
+    }
+    else if (this->_currentMaterial->_surface == TRANSMISSION)
+    {
+        this->_ui->surface_comboBox->setCurrentIndex(this->_ui->surface_comboBox->findText("Transmission"));
+        this->_ui->roughness_label->setVisible(true);
+        this->_ui->roughness_doubleSpinBox->setVisible(true);
+        this->_ui->ior_label->setVisible(true);
+        this->_ui->ior_doubleSpinBox->setVisible(true);
+    }
+    this->_ui->color_pushButton->setStyleSheet("background-color: rgb("+
+                                              QString::number(this->_currentMaterial->_color.x*255.0)+","+
+                                              QString::number(this->_currentMaterial->_color.y*255.0)+","+
+                                              QString::number(this->_currentMaterial->_color.z*255.0)+")");
+    this->_ui->emission_doubleSpinBox->setValue(this->_currentMaterial->_emission);
+    this->_ui->roughness_doubleSpinBox->setValue(this->_currentMaterial->_roughness);
+    this->_ui->ior_doubleSpinBox->setValue(this->_currentMaterial->_ior);
 }
 
 void ObjectsWindow::on_objects_listWidget_itemSelectionChanged()
 {
-    for (size_t i = 0; i < this->scene->mesh.objs.size(); ++i)
+    this->_ui->materials_listWidget->clear();
+    for (size_t i = 0; i < this->_scene->_mesh.objs.size(); ++i)
     {
-        if (this->scene->mesh.objs[i]->name == this->ui->objects_listWidget->currentItem()->text().toStdString())
+        if (this->_scene->_mesh.objs[i]->_name == this->_ui->objects_listWidget->currentItem()->text().toStdString())
         {
-            this->currentObj = this->scene->mesh.objs[i];
+            this->_currentObj = this->_scene->_mesh.objs[i];
             break;
         }
     }
-    this->ui->scrollAreaWidgetContents->setVisible(true);
-    this->ui->scrollArea->verticalScrollBar()->show();
-    this->ui->materials_comboBox->setCurrentIndex(this->ui->materials_comboBox->findText(QString::fromStdString(this->currentObj->material->name)));
-}
-
-void ObjectsWindow::on_materials_comboBox_currentIndexChanged(const QString &currentText)
-{
-    if (!this->currentObj)
+    if (!this->_currentObj)
         return;
-
-    for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
+    for (size_t i = 0; i < this->_currentObj->_materials.size(); ++i)
+        this->_ui->materials_listWidget->addItem(QString::fromStdString(this->_currentObj->_materials[i]->_name));
+    if (this->_currentObj->_materials.size())
     {
-        if (this->scene->mesh.materials[i]->name == currentText.toStdString())
-        {
-            this->currentObj->material = this->scene->mesh.materials[i];
-            break;
-        }
-    }
-    if (this->ui->materials_comboBox->currentIndex() == -1)
-    {
-        this->ui->surface_groupBox->setVisible(false);
-        this->ui->materials_comboBox->lineEdit()->setVisible(false);
+        this->_ui->scrollAreaWidgetContents->setVisible(true);
+        this->_ui->scrollArea->verticalScrollBar()->show();
+        this->_ui->materials_listWidget->setCurrentRow(0);
     }
     else
     {
-        this->ui->surface_groupBox->setVisible(true);
-        this->ui->materials_comboBox->lineEdit()->setVisible(true);
+        this->_ui->scrollAreaWidgetContents->setVisible(false);
+        this->_ui->scrollArea->verticalScrollBar()->hide();
     }
+}
+
+void ObjectsWindow::on_materials_listWidget_itemSelectionChanged()
+{
+    this->_currentMaterial = this->_scene->_mesh.materials[this->_ui->materials_listWidget->currentItem()->text().toStdString()];
+    if (!this->_currentMaterial)
+        return;
+    this->_ui->surface_groupBox->setVisible(true);
+    this->_setSurfaceDefault = false;
     this->updateSurface();
-}
-
-void ObjectsWindow::materials_comboBox_editingFinished()
-{
-    if (!this->currentObj)
-        return;
-
-    if (this->ui->materials_comboBox->currentText() == "")
-    {
-        this->ui->materials_comboBox->setCurrentText(QString::fromStdString(this->currentObj->material->name));
-        return;
-    }
-    this->currentObj->material->name = this->ui->materials_comboBox->currentText().toStdString();
-    this->ui->materials_comboBox->setItemText(this->ui->materials_comboBox->currentIndex(), this->ui->materials_comboBox->currentText());
-}
-
-void ObjectsWindow::on_newMaterial_pushButton_clicked()
-{
-    if (!this->currentObj)
-        return;
-
-    Material *material = new Material();
-
-    material->name = this->uniqueMaterialName("Material");
-    this->scene->mesh.materials.push_back(material);
-    this->ui->materials_comboBox->addItem(QString::fromStdString(material->name));
-    this->currentObj->material = material;
-    this->ui->materials_comboBox->setCurrentIndex(this->ui->materials_comboBox->findText(QString::fromStdString(this->currentObj->material->name)));
-    this->setSurfaceDefault = true;
-    this->on_surface_comboBox_currentIndexChanged(this->ui->surface_comboBox->itemText(0));
-}
-
-void ObjectsWindow::on_deleteMaterial_pushButton_clicked()
-{
-    if (!this->currentObj)
-        return;
-
-    this->currentObj->material = &this->scene->mesh.defaultMaterial;
-    this->ui->materials_comboBox->setCurrentIndex(-1);
+    this->_setSurfaceDefault = true;
 }
 
 void ObjectsWindow::on_surface_comboBox_currentIndexChanged(const QString &currentText)
 {
-    if (!this->currentObj)
-        return;
-
-    if (this->setSurfaceDefault)
+    if (this->_setSurfaceDefault)
     {
-        this->currentObj->material->color = Vector3d(1.0, 1.0, 1.0);
-        this->currentObj->material->emission = 0.0;
-        this->currentObj->material->roughness = 0.0;
-        this->currentObj->material->ior = 0.0;
+        this->_currentMaterial->_roughness = 0.0;
+        this->_currentMaterial->_ior = 1.0;
+        this->_currentMaterial->_emission = 0.0;
     }
-    this->ui->emission_widget->setVisible(false);
-    this->ui->roughness_widget->setVisible(false);
-    this->ui->ior_widget->setVisible(false);
     if (currentText == "Diffuse")
-    {
-        this->currentObj->material->surface = DIFFUSE;
-    }
+        this->_currentMaterial->_surface = DIFFUSE;
     else if (currentText == "Reflection")
-    {
-        this->currentObj->material->surface = REFLECTION;
-        this->ui->roughness_widget->setVisible(true);
-    }
+        this->_currentMaterial->_surface = REFLECTION;
     else if (currentText == "Transmission")
-    {
-        this->currentObj->material->surface = TRANSMISSION;
-        if (this->setSurfaceDefault)
-            this->currentObj->material->ior = 1.0;
-        this->ui->roughness_widget->setVisible(true);
-        this->ui->ior_widget->setVisible(true);
-    }
-    else if (currentText == "Emission")
-    {
-        this->currentObj->material->surface = EMISSION;
-        if (this->setSurfaceDefault)
-            this->currentObj->material->emission = 1.0;
-        this->ui->emission_widget->setVisible(true);
-    }
-    this->ui->color_pushButton->setStyleSheet("background-color: rgb("+
-                                              QString::number(this->currentObj->material->color.x*255.0)+","+
-                                              QString::number(this->currentObj->material->color.y*255.0)+","+
-                                              QString::number(this->currentObj->material->color.z*255.0)+")");
-    this->ui->emission_doubleSpinBox->setValue(this->currentObj->material->emission);
-    this->ui->roughness_doubleSpinBox->setValue(this->currentObj->material->roughness);
-    this->ui->ior_doubleSpinBox->setValue(this->currentObj->material->ior);
+        this->_currentMaterial->_surface = TRANSMISSION;
+    this->updateSurface();
 }
 
 void ObjectsWindow::on_color_pushButton_clicked()
 {
-    if (!this->currentObj)
-        return;
-
-    QColor color = QColorDialog::getColor(QColor(static_cast<int>(this->currentObj->material->color.x*255.0),
-                                                 static_cast<int>(this->currentObj->material->color.y*255.0),
-                                                 static_cast<int>(this->currentObj->material->color.z*255.0)));
+    QColor color = QColorDialog::getColor(QColor(static_cast<int>(this->_currentMaterial->_color.x*255.0),
+                                                 static_cast<int>(this->_currentMaterial->_color.y*255.0),
+                                                 static_cast<int>(this->_currentMaterial->_color.z*255.0)));
 
     if (!color.isValid())
         return;
-    this->currentObj->material->color = Vector3d(color.red()/255.0, color.green()/255.0, color.blue()/255.0);
-    this->ui->color_pushButton->setStyleSheet("background-color: rgb("+
-                                              QString::number(this->currentObj->material->color.x*255.0)+","+
-                                              QString::number(this->currentObj->material->color.y*255.0)+","+
-                                              QString::number(this->currentObj->material->color.z*255.0)+")");
+    this->_currentMaterial->_color = Vector3d(color.red()/255.0, color.green()/255.0, color.blue()/255.0);
+    this->_ui->color_pushButton->setStyleSheet("background-color: rgb("+
+                                              QString::number(this->_currentMaterial->_color.x*255.0)+","+
+                                              QString::number(this->_currentMaterial->_color.y*255.0)+","+
+                                              QString::number(this->_currentMaterial->_color.z*255.0)+")");
 }
 
 void ObjectsWindow::on_emission_doubleSpinBox_valueChanged(double value)
 {
-    std::string name = this->ui->materials_comboBox->currentText().toStdString();
-
-    for (size_t i = 0; i < this->scene->mesh.materials.size(); ++i)
-    {
-        if (this->scene->mesh.materials[i]->name == name)
-        {
-            this->scene->mesh.materials[i]->emission = value;
-            break;
-        }
-    }
+    this->_currentMaterial->_emission = value;
 }
 
 void ObjectsWindow::on_roughness_doubleSpinBox_valueChanged(double value)
 {
-    this->currentObj->material->roughness = value;
+    this->_currentMaterial->_roughness = value;
 }
 
 void ObjectsWindow::on_ior_doubleSpinBox_valueChanged(double value)
 {
-    this->currentObj->material->ior = value;
+    this->_currentMaterial->_ior = value;
 }

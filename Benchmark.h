@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <string>
+#include <iostream>
 
 struct benchTime_t
 {
@@ -25,10 +26,13 @@ public:
 
 public:
     void start();
+    void pause();
+    void resume();
     benchTime_t getBenchTime();
 
 private:
-    std::chrono::steady_clock::time_point startPoint;
+    std::chrono::steady_clock::time_point _startPoint;
+    std::chrono::steady_clock::time_point _pausePoint;
 };
 
 #endif // BENCHMARK_H

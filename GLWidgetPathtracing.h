@@ -35,13 +35,13 @@ private slots:
   void update_timeout();
 
 private:
-    Scene *scene;
-    QTimer update_timer;
-    int currentWidth, currentHeight;
-    bool rendering;
+    Scene *_scene;
+    QTimer _update_timer;
+    int _currentWidth, _currentHeight;
+    bool _rendering;
 
-    GLubyte *pixels;
-    GLuint texture_id;
+    GLubyte *_pixels;
+    GLuint _texture_id;
 };
 
 #endif // GLWIDGETPATHTRACING_H

@@ -3,9 +3,9 @@
 
 #include <QMainWindow>
 #include <QFileDialog>
+#include "Engine.h"
 #include "SettingsWindow.h"
 #include "ObjectsWindow.h"
-#include "Engine.h"
 
 namespace Ui {
 class MainWindow;
@@ -24,6 +24,7 @@ private:
     void keyPressEvent(QKeyEvent *e);
     void resizeWindows();
     void disableOptions(bool status);
+    Q_INVOKABLE void progressBar(int nb);
     Q_INVOKABLE void writeTerminal(const QString &str, bool replace = false);
     bool loadFile(QString path);
 
@@ -35,13 +36,13 @@ private slots:
     Q_INVOKABLE void on_stop_pushButton_clicked();
 
 private:
-    ObjectsWindow *objectsWindow;
-    SettingsWindow *settingsWindow;
+    ObjectsWindow *_objectsWindow;
+    SettingsWindow *_settingsWindow;
 
-    Engine *engine;
-    Scene *scene;
-    QString objPath;
-    Ui::MainWindow *ui;
+    Engine *_engine;
+    Scene *_scene;
+    QString _objPath;
+    Ui::MainWindow *_ui;
 };
 
 #endif // MAINWINDOW_H

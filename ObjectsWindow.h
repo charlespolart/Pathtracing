@@ -20,19 +20,15 @@ public:
     ~ObjectsWindow();
 
 public:
-    void updateMaterialList();
     void displayObjectsList();
 
 private:
-    std::string uniqueMaterialName(const std::string &name, int nb = 0);
+    void hideUI();
     void updateSurface();
 
 private slots:
     void on_objects_listWidget_itemSelectionChanged();
-    void on_materials_comboBox_currentIndexChanged(const QString &currentText);
-    void materials_comboBox_editingFinished();
-    void on_newMaterial_pushButton_clicked();
-    void on_deleteMaterial_pushButton_clicked();
+    void on_materials_listWidget_itemSelectionChanged();
     void on_surface_comboBox_currentIndexChanged(const QString &currentText);
     void on_color_pushButton_clicked();
     void on_emission_doubleSpinBox_valueChanged(double value);
@@ -40,11 +36,12 @@ private slots:
     void on_ior_doubleSpinBox_valueChanged(double value);
 
 private:
-    Ui::ObjectsWindow *ui;
+    Ui::ObjectsWindow *_ui;
 
-    Scene *scene;
-    Obj3d *currentObj;
-    bool setSurfaceDefault;
+    Scene *_scene;
+    Obj3d *_currentObj;
+    Material *_currentMaterial;
+    bool _setSurfaceDefault;
 };
 
 #endif // OBJECTSWINDOW_H

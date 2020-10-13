@@ -12,8 +12,11 @@ void CollisionTree::freeTree(treeNode_t *node)
 
 boundingBox_t *CollisionTree::createBoundingBox(const boundingBox_t *bBox1, const boundingBox_t *bBox2)
 {
-    boundingBox_t *bBox = new boundingBox_t;
+    boundingBox_t *bBox = nullptr;
 
+    if (!bBox1 || !bBox2)
+        return (nullptr);
+    bBox = new boundingBox_t;
     bBox->topRight.x = std::max(bBox1->topRight.x, bBox2->topRight.x);
     bBox->topRight.y = std::max(bBox1->topRight.y, bBox2->topRight.y);
     bBox->topRight.z = std::max(bBox1->topRight.z, bBox2->topRight.z);
@@ -30,6 +33,11 @@ boundingBox_t *CollisionTree::createBoundingBox(const boundingBox_t *bBox1, cons
 boundingBox_t *CollisionTree::createBoundingBox(const face3_t &face, const std::vector<Vector3d> &vertices)
 {
     boundingBox_t *bBox = new boundingBox_t;
+
+    if (face.indexV[0] - 1 < 0 || (size_t)face.indexV[0] - 1 >= vertices.size() ||
+            face.indexV[1] - 1 < 0 || (size_t)face.indexV[1] - 1 >= vertices.size() ||
+            face.indexV[2] - 1 < 0 || (size_t)face.indexV[2] - 1 >= vertices.size())
+        return (nullptr);
 
     bBox->topRight.x = std::max(vertices[face.indexV[0] - 1].x,
             std::max(vertices[face.indexV[1] - 1].x,
@@ -86,12 +94,13 @@ treeNode_t *CollisionTree::buildTreeLeafs(Obj3d *obj3d)
     std::vector<treeNode_t *> leafs;
     treeNode_t *node = nullptr;
 
-    for (size_t i = 0; i < obj3d->faces3.size(); ++i)
+    if (!obj3d) return (nullptr);
+    for (size_t i = 0; i < obj3d->_faces3.size(); ++i)
     {
         node = new treeNode_t;
         node->obj3d = obj3d;
         node->faceIndex = i;
-        node->bBox = CollisionTree::createBoundingBox(obj3d->faces3[i], obj3d->vertices->v);
+        node->bBox = CollisionTree::createBoundingBox(obj3d->_faces3[i], obj3d->_vertices->v);
         leafs.push_back(node);
     }
     return (CollisionTree::buildTreeRoots(leafs));
@@ -106,8 +115,8 @@ void CollisionTree::buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<
     while (true)
     {
         index_mutex.lock();
-        if (obj3ds[i]->collisionTree)
-            trees.push_back(static_cast<treeNode_t *>(obj3ds[i]->collisionTree));
+        if (obj3ds[i]->_collisionTree)
+            trees.push_back(static_cast<treeNode_t *>(obj3ds[i]->_collisionTree));
         if (*index >= obj3ds.size())
         {
             index_mutex.unlock();
@@ -116,7 +125,7 @@ void CollisionTree::buildMultiThreads(std::vector<Obj3d *> &obj3ds, std::vector<
         i = *index;
         (*index)++;
         index_mutex.unlock();
-        obj3ds[i]->collisionTree = CollisionTree::buildTreeLeafs(obj3ds[i]);
+        obj3ds[i]->_collisionTree = CollisionTree::buildTreeLeafs(obj3ds[i]);
     }
 }
 
@@ -126,6 +135,8 @@ treeNode_t *CollisionTree::build(std::vector<Obj3d *> &obj3ds, int threads)
     std::vector<std::thread> build_threads;
     size_t index = 0;
 
+    if (!obj3ds.size())
+        return (nullptr);
     for (int i = 0; i < threads; ++i)
     {
         build_threads.emplace_back(std::thread(&CollisionTree::buildMultiThreads, std::ref(obj3ds), std::ref(trees), &index));

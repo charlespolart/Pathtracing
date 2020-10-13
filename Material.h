@@ -11,21 +11,28 @@ enum surface_e
     DIFFUSE,
     REFLECTION,
     TRANSMISSION,
-    EMISSION
+};
+
+struct texture_t
+{
+    int x = 0, y = 0;
+    uint8_t *pixels = nullptr;
 };
 
 class Material
 {
 public:
     Material();
+    ~Material();
 
 public:
-    std::string name;
-    surface_e surface;
-    Vector3d color;
-    double emission;
-    double roughness;
-    double ior;
+    std::string _name;
+    surface_e _surface;
+    Vector3d _color;
+    double _emission;
+    double _roughness;
+    double _ior;
+    texture_t _texture;
 };
 
 Q_DECLARE_METATYPE(Material *)

@@ -8,7 +8,7 @@
 class Pathtracing
 {
 public:
-    static Vector3d render(const Ray &ray, Scene *scene, int depth = 0);
+    static Vector3d render(const Ray &ray, Scene *scene);
 };
 
 #endif // PATHTRACING_H

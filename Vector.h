@@ -1,7 +1,6 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-//#define M_PI 3.14159265358979323846
 #define _USE_MATH_DEFINES
 
 #include <cmath>
@@ -10,16 +9,22 @@ class Vector3d
 {
 public:
     Vector3d();
+    Vector3d(double c);
     Vector3d(double x, double y, double z);
 
 public:
-    Vector3d &normalise();
+    Vector3d progressiveAverage(const Vector3d &v, int samples) const;
+    double max() const;
+    double min() const;
+    double average() const;
+    Vector3d normalise() const;
     Vector3d crossProduct(const Vector3d &) const;
     double dotProduct(const Vector3d &) const;
-    void rotation(const Vector3d &angle);
-    void rotationX(double angle);
-    void rotationY(double angle);
-    void rotationZ(double angle);
+    Vector3d lerp(const Vector3d &v, double nb);
+    Vector3d rotationX(double angle) const;
+    Vector3d rotationY(double angle) const;
+    Vector3d rotationZ(double angle) const;
+    Vector3d rotation(const Vector3d &angle) const;
 
 public:
     Vector3d operator+(double nb) const;
@@ -43,6 +48,25 @@ public:
 
 public:
     double x, y, z;
+};
+
+template<typename T>
+Vector3d operator+(T, const Vector3d &v);
+template<typename T>
+Vector3d operator-(T, const Vector3d &v);
+template<typename T>
+Vector3d operator*(T, const Vector3d &v);
+
+class Vector2d
+{
+public:
+    Vector2d() :
+        x(0), y(0) {}
+    Vector2d(int x, int y) :
+        x(x), y(y) {}
+
+public:
+    double x, y;
 };
 
 class Vector2i

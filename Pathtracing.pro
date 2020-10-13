@@ -6,7 +6,13 @@
 
 QT       += core gui opengl
 
+LIBS += $$_PRO_FILE_PWD_\libs\FreeImage\FreeImage.lib
+INCLUDEPATH += $$_PRO_FILE_PWD_\libs\FreeImage
+
 LIBS += -lopengl32 -lglu32
+
+#QMAKE_CXXFLAGS+= -fopenmp
+#QMAKE_LFLAGS +=  -fopenmp
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -61,6 +67,7 @@ HEADERS += \
         Obj3d.h \
         ObjectsWindow.h \
         Pathtracing.h \
+        Rand.h \
         Ray.h \
         Scene.h \
         SettingsWindow.h \

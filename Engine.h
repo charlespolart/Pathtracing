@@ -28,7 +28,9 @@ public:
     void start();
     void stop();
     void pause();
-    void clean();
+    void exit();
+    bool isRendering() const;
+    bool isPaused() const;
 
 private:
     void putPixel(int x, int y, const Vector3d &c);
@@ -37,14 +39,16 @@ private:
     void render();
 
 private:
-    QMainWindow *mainwindow;
-    bool rendering;
-    bool exit;
-    Scene *scene;
-    GLubyte *pixels;
-    pixelData_t *pixelsData;
-    std::mutex render_mutex;
-    std::thread engine_thread;
+    QMainWindow *_mainwindow;
+    bool _rendering;
+    bool _pause;
+    bool _exit;
+    Benchmark _benchmark;
+    Scene *_scene;
+    GLubyte *_pixels;
+    pixelData_t *_pixelsData;
+    std::mutex _render_mutex;
+    std::thread _engine_thread;
 };
 
 #endif // ENGINE_H

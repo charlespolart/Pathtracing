@@ -18,16 +18,16 @@ public:
     Ray initRay(double x, double y) const;
 
 public:
-    int width;
-    int height;
-    Vector3d position;
-    Vector3d rotation;
-    double FOV;
-    double aspectRatio;
+    int _width;
+    int _height;
+    Vector3d _position;
+    Vector3d _rotation;
+    double _FOV;
+    double _aspectRatio;
 
 private:
-    double scale;
-    bool inv;
+    double _scale;
+    bool _inv;
 };
 
 #endif // CAMERA_H

@@ -10,12 +10,22 @@ Benchmark::~Benchmark()
 
 void Benchmark::start()
 {
-    this->startPoint = std::chrono::steady_clock::now();
+    this->_startPoint = std::chrono::steady_clock::now();
+}
+
+void Benchmark::pause()
+{
+    this->_pausePoint = std::chrono::steady_clock::now();
+}
+
+void Benchmark::resume()
+{
+    this->_startPoint += std::chrono::milliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-this->_pausePoint).count());
 }
 
 benchTime_t Benchmark::getBenchTime()
 {
-    long long ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-this->startPoint).count();
+    long long ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-this->_startPoint).count();
     benchTime_t benchTime;
 
     if (ms >= 3600000)

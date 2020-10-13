@@ -32,9 +32,9 @@ private slots:
     void on_maxDepth_spinBox_valueChanged(int value);
 
 private:
-    Ui::SettingsWindow *ui;
+    Ui::SettingsWindow *_ui;
 
-    Scene *scene;
+    Scene *_scene;
 };
 
 #endif // SETTINGSWINDOW_H

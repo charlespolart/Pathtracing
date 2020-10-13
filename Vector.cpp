@@ -6,31 +6,48 @@ Vector3d::Vector3d() :
 {
 }
 
+Vector3d::Vector3d(double c) :
+    x(c), y(c), z(c)
+{
+}
+
 Vector3d::Vector3d(double x, double y, double z) :
     x(x), y(y), z(z)
 {
 }
 
-Vector3d &Vector3d::normalise()
+double Vector3d::max() const
+{
+    return (std::max(this->x, std::max(this->y, this->z)));
+}
+
+double Vector3d::min() const
+{
+    return (std::min(this->x, std::min(this->y, this->z)));
+}
+
+double Vector3d::average() const
+{
+    return ((this->x + this->y + this->z) / 3.0);
+}
+
+Vector3d Vector3d::progressiveAverage(const Vector3d &v, int samples) const
+{
+    return (*this + (v - *this) / samples);
+}
+
+Vector3d Vector3d::normalise() const
 {
     double norm = std::sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
 
-    if (norm == 0.0)
-        return (*this);
-    this->x /= norm;
-    this->y /= norm;
-    this->z /= norm;
-    return (*this);
+    return (norm == 0.0 ? *this : *this/norm);
 }
 
 Vector3d Vector3d::crossProduct(const Vector3d &v) const
 {
-    Vector3d cross;
-
-    cross.x = this->y*v.z - this->z*v.y;
-    cross.y = this->z*v.x - this->x*v.z;
-    cross.z = this->x*v.y - this->y*v.x;
-    return (cross);
+    return (Vector3d(this->y*v.z - this->z*v.y,
+                     this->z*v.x - this->x*v.z,
+                     this->x*v.y - this->y*v.x));
 }
 
 double Vector3d::dotProduct(const Vector3d &v) const
@@ -38,76 +55,57 @@ double Vector3d::dotProduct(const Vector3d &v) const
     return (this->x*v.x + this->y*v.y + this->z*v.z);
 }
 
-void Vector3d::rotationX(double angle)
+Vector3d Vector3d::lerp(const Vector3d &v, double nb)
 {
-  if (angle < 0.0 || angle > 0.0)
-    {
-      angle = (M_PI * -angle) / 180.0;
-      Vector3d mat1 = Vector3d(1.0, 0.0, 0.0);
-      Vector3d mat2 = Vector3d(0.0, std::cos(angle), -std::sin(angle));
-      Vector3d mat3 = Vector3d(0.0, std::sin(angle), std::cos(angle));
-      Vector3d tmp = *this;
-      this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
-      this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
-      this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;
-    }
+    double m = 1.0 - nb;
+
+    return (Vector3d(this->x * m + v.x * nb, this->y * m + v.y * nb, this->z * m + v.z * nb));
 }
 
-void Vector3d::rotationY(double angle)
+Vector3d Vector3d::rotationX(double angle) const
 {
-  if (angle < 0.0 || angle > 0.0)
-    {
-      angle = (M_PI * angle) / 180.0;
-      Vector3d mat1 = Vector3d(std::cos(angle), 0.0, -std::sin(angle));
-      Vector3d mat2 = Vector3d(0.0, 1.0, 0.0);
-      Vector3d mat3 = Vector3d(std::sin(angle), 0.0, std::cos(angle));
-      Vector3d tmp = *this;
-      this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
-      this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
-      this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;
-    }
+    if (angle == 0.0) return (*this);
+    angle = (M_PI * -angle) / 180.0;
+    return (Vector3d(this->dotProduct(Vector3d(1.0, 0.0, 0.0)),
+                     this->dotProduct(Vector3d(0.0, std::cos(angle), -std::sin(angle))),
+                     this->dotProduct(Vector3d(0.0, std::sin(angle), std::cos(angle)))));
 }
 
-void Vector3d::rotationZ(double angle)
+Vector3d Vector3d::rotationY(double angle) const
 {
-  if (angle < 0.0 || angle > 0.0)
-    {
-      angle = (M_PI * angle) / 180.0;
-      Vector3d mat1 = Vector3d(std::cos(angle), -std::sin(angle), 0.0);
-      Vector3d mat2 = Vector3d(std::sin(angle), std::cos(angle), 0.0);
-      Vector3d mat3 = Vector3d(0.0, 0.0, 1.0);
-      Vector3d tmp = *this;
-      this->x = mat1.x * tmp.x + mat1.y * tmp.y + mat1.z * tmp.z;
-      this->y = mat2.x * tmp.x + mat2.y * tmp.y + mat2.z * tmp.z;
-      this->z = mat3.x * tmp.x + mat3.y * tmp.y + mat3.z * tmp.z;
-    }
+    if (angle == 0.0) return (*this);
+    angle = (M_PI * angle) / 180.0;
+    return (Vector3d(this->dotProduct(Vector3d(std::cos(angle), 0.0, -std::sin(angle))),
+                     this->dotProduct(Vector3d(0.0, 1.0, 0.0)),
+                     this->dotProduct(Vector3d(std::sin(angle), 0.0, std::cos(angle)))));
 }
 
-void Vector3d::rotation(const Vector3d &angle)
+Vector3d Vector3d::rotationZ(double angle) const
 {
-  this->rotationX(angle.x);
-  this->rotationY(angle.y);
-  this->rotationZ(angle.z);
+    if (angle == 0.0) return (*this);
+    angle = (M_PI * angle) / 180.0;
+    return (Vector3d(this->dotProduct(Vector3d(std::cos(angle), -std::sin(angle), 0.0)),
+                     this->dotProduct(Vector3d(std::sin(angle), std::cos(angle), 0.0)),
+                     this->dotProduct(Vector3d(0.0, 0.0, 1.0))));
+}
+
+Vector3d Vector3d::rotation(const Vector3d &angle) const
+{
+    return (this->rotationX(angle.x).rotationY(angle.y).rotationZ(angle.z));
 }
 
 Vector3d Vector3d::operator+(double nb) const
 {
-    Vector3d res;
-
-    res.x = this->x + nb;
-    res.y = this->y + nb;
-    res.z = this->z + nb;
-    return (res);
+    return (Vector3d(this->x + nb,
+                     this->y + nb,
+                     this->z + nb));
 }
 
 Vector3d Vector3d::operator+(const Vector3d &v) const
 {
-    Vector3d res;
-
-    res.x = this->x + v.x;
-    res.y = this->y + v.y;
-    res.z = this->z + v.z;
-    return (res);
+    return (Vector3d(this->x + v.x,
+                     this->y + v.y,
+                     this->z + v.z));
 }
 
 Vector3d &Vector3d::operator+=(double nb)
@@ -128,22 +126,16 @@ Vector3d &Vector3d::operator+=(const Vector3d &v)
 
 Vector3d Vector3d::operator-(double nb) const
 {
-    Vector3d res;
-
-    res.x = this->x - nb;
-    res.y = this->y - nb;
-    res.z = this->z - nb;
-    return (res);
+    return (Vector3d(this->x - nb,
+                     this->y - nb,
+                     this->z - nb));
 }
 
 Vector3d Vector3d::operator-(const Vector3d &v) const
 {
-    Vector3d res;
-
-    res.x = this->x - v.x;
-    res.y = this->y - v.y;
-    res.z = this->z - v.z;
-    return (res);
+    return (Vector3d(this->x - v.x,
+                     this->y - v.y,
+                     this->z - v.z));
 }
 
 Vector3d &Vector3d::operator-=(double nb)
@@ -164,22 +156,16 @@ Vector3d &Vector3d::operator-=(const Vector3d &v)
 
 Vector3d Vector3d::operator*(double nb) const
 {
-    Vector3d res;
-
-    res.x = this->x * nb;
-    res.y = this->y * nb;
-    res.z = this->z * nb;
-    return (res);
+    return (Vector3d(this->x * nb,
+                     this->y * nb,
+                     this->z * nb));
 }
 
 Vector3d Vector3d::operator*(const Vector3d &v) const
 {
-    Vector3d res;
-
-    res.x = this->x * v.x;
-    res.y = this->y * v.y;
-    res.z = this->z * v.z;
-    return (res);
+    return (Vector3d(this->x * v.x,
+                     this->y * v.y,
+                     this->z * v.z));
 }
 
 Vector3d &Vector3d::operator*=(double nb)
@@ -200,22 +186,16 @@ Vector3d &Vector3d::operator*=(const Vector3d &v)
 
 Vector3d Vector3d::operator/(double nb) const
 {
-    Vector3d res;
-
-    res.x = this->x / nb;
-    res.y = this->y / nb;
-    res.z = this->z / nb;
-    return (res);
+    return (Vector3d(this->x / nb,
+                     this->y / nb,
+                     this->z / nb));
 }
 
 Vector3d Vector3d::operator/(const Vector3d &v) const
 {
-    Vector3d res;
-
-    res.x = this->x / v.x;
-    res.y = this->y / v.y;
-    res.z = this->z / v.z;
-    return (res);
+    return (Vector3d(this->x / v.x,
+                     this->y / v.y,
+                     this->z / v.z));
 }
 
 Vector3d &Vector3d::operator/=(double nb)
@@ -236,14 +216,32 @@ Vector3d &Vector3d::operator/=(const Vector3d &v)
 
 bool Vector3d::operator==(double nb)
 {
-    if (this->x < nb || this->x > nb || this->y < nb || this->y > nb || this->z < nb || this->z > nb)
-        return (false);
-    return (true);
+    if (std::abs(this->x - nb) <= __DBL_EPSILON__ && std::abs(this->y - nb) <= __DBL_EPSILON__ && std::abs(this->z - nb) <= __DBL_EPSILON__)
+        return (true);
+    return (false);
 }
 
 bool Vector3d::operator!=(double nb)
 {
-    if (this->x < nb || this->x > nb || this->y < nb || this->y > nb || this->z < nb || this->z > nb)
-        return (true);
-    return (false);
+    if (std::abs(this->x - nb) <= __DBL_EPSILON__ && std::abs(this->y - nb) <= __DBL_EPSILON__ && std::abs(this->z - nb) <= __DBL_EPSILON__)
+        return (false);
+    return (true);
+}
+
+template<typename T>
+Vector3d operator+(T nb, const Vector3d &v)
+{
+    return (v + nb);
+}
+
+template<typename T>
+Vector3d operator-(T nb, const Vector3d &v)
+{
+    return (v - nb);
+}
+
+template<typename T>
+Vector3d operator*(T nb, const Vector3d &v)
+{
+    return (v * nb);
 }

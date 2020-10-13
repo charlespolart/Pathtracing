@@ -49,25 +49,25 @@ private slots:
     void update_timeout();
 
 private:
-    SettingsWindow *settingsWindow;
-    Scene *scene;
-    QTimer update_timer;
-    bool rendering;
+    SettingsWindow *_settingsWindow;
+    Scene *_scene;
+    QTimer _update_timer;
+    bool _rendering;
 
-    QTime frame_time;
-    double deltaTime;
-    int lastMouseX, lastMouseY;
-    Vector3d lastRotation;
-    Vector3d lastPosition;
-    inputs_t inputs;
+    QElapsedTimer _frame_time;
+    double _deltaTime;
+    int _lastMouseX, _lastMouseY;
+    Vector3d _lastRotation;
+    Vector3d _lastPosition;
+    inputs_t _inputs;
 
-    std::vector<Vector3d> vertices;
-    std::vector<Vector3d> normals;
-    uint *indices;
-    size_t indices_size;
-    GLuint vbo_vertices_id;
-    GLuint vbo_normals_id;
-    GLuint vbo_indices_id;
+    std::vector<Vector3d> _vertices;
+    std::vector<Vector3d> _normals;
+    uint *_indices;
+    size_t _indices_size;
+    GLuint _vbo_vertices_id;
+    GLuint _vbo_normals_id;
+    GLuint _vbo_indices_id;
 };
 
 #endif // GLWIDGETOPENGL_H

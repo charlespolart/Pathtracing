@@ -2,55 +2,55 @@
 
 GLWidgetPathtracing::GLWidgetPathtracing(QWidget *parent) :
     QOpenGLWidget(parent),
-    scene(nullptr),
-    currentWidth(0),
-    currentHeight(0),
-    rendering(true),
-    pixels(nullptr),
-    texture_id(0)
+    _scene(nullptr),
+    _currentWidth(0),
+    _currentHeight(0),
+    _rendering(true),
+    _pixels(nullptr),
+    _texture_id(0)
 {
-    connect(&this->update_timer, SIGNAL(timeout()), this, SLOT(update_timeout()));
-    this->update_timer.start(1000/FPS);
+    connect(&this->_update_timer, SIGNAL(timeout()), this, SLOT(update_timeout()));
+    this->_update_timer.start(1000/FPS);
 }
 
 GLWidgetPathtracing::~GLWidgetPathtracing()
 {
-    if (this->pixels)
-        delete [] this->pixels;
+    if (this->_pixels)
+        delete [] this->_pixels;
 }
 
 GLubyte *GLWidgetPathtracing::getPixels() const
 {
-    return (this->pixels);
+    return (this->_pixels);
 }
 
 void GLWidgetPathtracing::setScene(Scene *scene)
 {
-    this->scene = scene;
+    this->_scene = scene;
 }
 
 void GLWidgetPathtracing::stop()
 {
     this->update();
-    this->rendering = false;
+    this->_rendering = false;
 }
 
 void GLWidgetPathtracing::init()
 {
-    if (this->pixels)
-        delete [] this->pixels;
-    this->currentWidth = this->scene->camera->width;
-    this->currentHeight = this->scene->camera->height;
-    this->pixels = new GLubyte[this->currentWidth*this->currentHeight*3];
-    std::memset(this->pixels, 0, static_cast<size_t>(this->currentWidth*this->currentHeight*3));
-    this->rendering = true;
+    if (this->_pixels)
+        delete [] this->_pixels;
+    this->_currentWidth = this->_scene->_camera->_width;
+    this->_currentHeight = this->_scene->_camera->_height;
+    this->_pixels = new GLubyte[this->_scene->_camera->_width*this->_scene->_camera->_height*3];
+    std::memset(this->_pixels, 0, static_cast<size_t>(this->_scene->_camera->_width*this->_scene->_camera->_height*3));
+    this->_rendering = true;
 }
 
 void GLWidgetPathtracing::initializeGL()
 {
     glEnable(GL_TEXTURE_2D);
-    glGenTextures(1, &this->texture_id);
-    glBindTexture(GL_TEXTURE_2D, this->texture_id);
+    glGenTextures(1, &this->_texture_id);
+    glBindTexture(GL_TEXTURE_2D, this->_texture_id);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
@@ -62,15 +62,15 @@ void GLWidgetPathtracing::resizeGL(int width, int height)
 
 void GLWidgetPathtracing::paintGL()
 {
-    double ratio = qMin(static_cast<double>(this->width())/static_cast<double>(this->currentWidth),
-                        static_cast<double>(this->height())/static_cast<double>(this->currentHeight));
-    GLint width = static_cast<GLint>(this->currentWidth*ratio), height = static_cast<GLint>(this->currentHeight*ratio);
+    double ratio = qMin(static_cast<double>(this->width())/static_cast<double>(this->_currentWidth),
+                        static_cast<double>(this->height())/static_cast<double>(this->_currentHeight));
+    GLint width = static_cast<GLint>(this->_currentWidth*ratio), height = static_cast<GLint>(this->_currentHeight*ratio);
 
-    if (!this->pixels)
+    if (!this->_pixels)
         return;
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glViewport((this->width()-width)/2, (this->height()-height)/2, width, height);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->currentWidth, this->currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, this->pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, this->_currentWidth, this->_currentHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, this->_pixels);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glBegin(GL_QUADS);
@@ -83,6 +83,6 @@ void GLWidgetPathtracing::paintGL()
 
 void GLWidgetPathtracing::update_timeout()
 {
-    if (this->rendering)
+    if (this->_rendering)
         this->update();
 }

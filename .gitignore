@@ -4,7 +4,8 @@ debug
 *.Release
 *.Debug
 ui_*
-*.user
+*.user*
 Makefile
 *appdatalocaltemp*
 3D files
+Scenes

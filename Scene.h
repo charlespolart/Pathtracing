@@ -3,9 +3,9 @@
 
 #include <thread>
 #include <vector>
+#include "FileImport.h"
 #include "Camera.h"
 #include "Obj3d.h"
-#include "FileImport.h"
 #include "CollisionTree.h"
 #include "Benchmark.h"
 
@@ -13,7 +13,7 @@ struct mesh_t
 {
     vertices_t vertices;
     std::vector<Obj3d *> objs;
-    std::vector<Material *> materials;
+    std::map<std::string, Material *> materials;
     Material defaultMaterial;
     treeNode_t *collisionTree = nullptr;
 };
@@ -32,11 +32,11 @@ private:
     void freeMesh();
 
 public:
-    Camera *camera;
-    struct mesh_t mesh;
-    int samples;
-    int maxDepth;
-    size_t totalThreads;
+    Camera *_camera;
+    struct mesh_t _mesh;
+    int _samples;
+    int _maxDepth;
+    size_t _totalThreads;
 };
 
 #endif // SCENE_H
