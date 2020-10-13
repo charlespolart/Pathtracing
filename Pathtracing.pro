@@ -8,6 +8,7 @@ QT       += core gui opengl
 
 LIBS += $$_PRO_FILE_PWD_\libs\FreeImage\FreeImage.lib
 INCLUDEPATH += $$_PRO_FILE_PWD_\libs\FreeImage
+INCLUDEPATH += srcs
 
 LIBS += -lopengl32 -lglu32
 
@@ -33,50 +34,50 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
-        BSDF.cpp \
-        Benchmark.cpp \
-        Camera.cpp \
-        CastRay.cpp \
-        CollisionTree.cpp \
-        Engine.cpp \
-        FileImport.cpp \
-        GLWidgetOpenGL.cpp \
-        GLWidgetPathtracing.cpp \
-        Material.cpp \
-        Obj3d.cpp \
-        ObjectsWindow.cpp \
-        Pathtracing.cpp \
-        Scene.cpp \
-        SettingsWindow.cpp \
-        Vector.cpp \
-        main.cpp \
-        MainWindow.cpp
+        srcs/BSDF.cpp \
+        srcs/Benchmark.cpp \
+        srcs/Camera.cpp \
+        srcs/CastRay.cpp \
+        srcs/CollisionTree.cpp \
+        srcs/Engine.cpp \
+        srcs/FileImport.cpp \
+        srcs/GLWidgetOpenGL.cpp \
+        srcs/GLWidgetPathtracing.cpp \
+        srcs/Material.cpp \
+        srcs/Obj3d.cpp \
+        srcs/ObjectsWindow.cpp \
+        srcs/Pathtracing.cpp \
+        srcs/Scene.cpp \
+        srcs/SettingsWindow.cpp \
+        srcs/Vector.cpp \
+        srcs/main.cpp \
+        srcs/MainWindow.cpp
 
 HEADERS += \
-        BSDF.h \
-        Benchmark.h \
-        Camera.h \
-        CastRay.h \
-        CollisionTree.h \
-        Engine.h \
-        FileImport.h \
-        GLWidgetOpenGL.h \
-        GLWidgetPathtracing.h \
-        MainWindow.h \
-        Material.h \
-        Obj3d.h \
-        ObjectsWindow.h \
-        Pathtracing.h \
-        Rand.h \
-        Ray.h \
-        Scene.h \
-        SettingsWindow.h \
-        Vector.h
+        srcs/BSDF.h \
+        srcs/Benchmark.h \
+        srcs/Camera.h \
+        srcs/CastRay.h \
+        srcs/CollisionTree.h \
+        srcs/Engine.h \
+        srcs/FileImport.h \
+        srcs/GLWidgetOpenGL.h \
+        srcs/GLWidgetPathtracing.h \
+        srcs/MainWindow.h \
+        srcs/Material.h \
+        srcs/Obj3d.h \
+        srcs/ObjectsWindow.h \
+        srcs/Pathtracing.h \
+        srcs/Rand.h \
+        srcs/Ray.h \
+        srcs/Scene.h \
+        srcs/SettingsWindow.h \
+        srcs/Vector.h
 
 FORMS += \
-        mainwindow.ui \
-        objectswindow.ui \
-        settingswindow.ui
+        forms/mainwindow.ui \
+        forms/objectswindow.ui \
+        forms/settingswindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
