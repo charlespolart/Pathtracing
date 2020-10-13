@@ -15,7 +15,7 @@ Vector3d Pathtracing::render(const Ray &constRay, Scene *scene)
             break;
         }
         if (collisionData.material->_emission)
-            radiance += collisionData.hitPointColor * collisionData.material->_emission * throughput;
+            radiance += collisionData.hitPointColor * collisionData.material->_emission * throughput * 2.0;
 
         /* Russian roulette */
         /*if (bounces > 4)

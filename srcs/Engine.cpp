@@ -124,6 +124,15 @@ void Engine::drawPathtracing(int *current, int *sample)
     }
 }
 
+void savePPM(uint8_t *pixels, size_t width, size_t height)
+{
+    FILE *f = fopen("result.ppm", "w");
+    fprintf(f, "P3\n%d %d\n%d\n", width, height, 255);
+    for (size_t i = 0; i < width * height *3; i += 3)
+        fprintf(f,"%d %d %d ", (int)pixels[i], (int)pixels[i+1], (int)pixels[i+2]);
+    fclose(f);
+}
+
 void Engine::render()
 {
     std::vector<std::thread> render_threads;
@@ -152,6 +161,7 @@ void Engine::render()
             this->_pause = false;
             QMetaObject::invokeMethod(this->_mainwindow, "writeTerminal", Qt::AutoConnection, Q_ARG(QString, QString::fromStdString(_benchmark.getBenchTime().fullTime_str)));
             QMetaObject::invokeMethod(this->_mainwindow, "on_stop_pushButton_clicked", Qt::AutoConnection);
+            savePPM(this->_pixels, this->_scene->_camera->_width, this->_scene->_camera->_height);
         }
         Sleep(10);
     }
